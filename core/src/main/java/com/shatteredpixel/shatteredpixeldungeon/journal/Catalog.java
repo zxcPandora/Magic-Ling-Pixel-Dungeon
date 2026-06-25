@@ -55,6 +55,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bombs.ShrapnelBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.WoollyBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.books.bookslist.BrokenBooks;
 import com.shatteredpixel.shatteredpixeldungeon.items.books.bookslist.DeepBloodBooks;
+import com.shatteredpixel.shatteredpixeldungeon.items.books.bookslist.ElementYearBooks;
 import com.shatteredpixel.shatteredpixeldungeon.items.books.bookslist.GrassKingBooks;
 import com.shatteredpixel.shatteredpixeldungeon.items.books.bookslist.HellFireBooks;
 import com.shatteredpixel.shatteredpixeldungeon.items.books.bookslist.IceCityBooks;
@@ -156,7 +157,10 @@ import com.shatteredpixel.shatteredpixeldungeon.items.quest.GooBlob;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.MetalShard;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.hollow.AllSearchIQuest;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.hollow.PacManQuest;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfFlameCursed;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfBlessGoTend;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfRoseShiled;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Alchemize;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.BeaconOfReturning;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.CurseInfusion;
@@ -195,6 +199,7 @@ public enum Catalog {
 	ARTIFACTS,
 	TRINKETS,
 	BOOKS,
+	PLAYBOOKS,
 	MISC_EQUIPMENT,
 
 	//CONSUMABLES
@@ -348,8 +353,9 @@ public enum Catalog {
 
 		BOOKS.addItems(MagicGirlBooks.class, BrokenBooks.class, GrassKingBooks.class, IceCityBooks.class,
 				NoKingMobBooks.class, HollowCityBook.class, DeepBloodBooks.class, DimandBook.class,
-				BzmdrBooks.class, DeYiZiBooks.class, MoneyMoreBooks.class, PinkRandomBooks.class,
-				HellFireBooks.class, YellowSunBooks.class);
+				YellowSunBooks.class, ElementYearBooks.class, HellFireBooks.class);
+
+		PLAYBOOKS.addItems(BzmdrBooks.class, DeYiZiBooks.class, MoneyMoreBooks.class, PinkRandomBooks.class);
 
 		MISC_EQUIPMENT.addItems(BrokenSeal.class, SpiritBow.class, Waterskin.class, VelvetPouch.class,
 				PotionBandolier.class, ScrollHolder.class, MagicalHolster.class, Amulet.class);
@@ -405,7 +411,11 @@ public enum Catalog {
 				TrinketCatalyst.class, Stylus.class, Torch.class, Honeypot.class, Ankh.class,
 				CorpseDust.class, Embers.class, CeremonialCandle.class, DarkGold.class, DwarfToken.class,
 				GooBlob.class, TengusMask.class, MetalShard.class, KingsCrown.class,
-				LiquidMetal.class, ArcaneResin.class, PotionOfNoWater.class);
+				LiquidMetal.class, ArcaneResin.class, PotionOfNoWater.class,
+
+				ScrollOfRoseShiled.class,
+				ScrollOfFlameCursed.class,
+				ScrollOfBlessGoTend.class);
 
 		MINIGAMES.addItems(
 				PacManQuest.SmallPoint.class,
@@ -448,21 +458,8 @@ public enum Catalog {
 		equipmentCatalogs.add(WANDS);
 		equipmentCatalogs.add(RINGS);
 		equipmentCatalogs.add(ARTIFACTS);
-
-		equipmentCatalogs.add(PROPS_LEVEL1_GOOD);
-		equipmentCatalogs.add(PROPS_LEVEL2_GOOD);
-		equipmentCatalogs.add(PROPS_LEVEL3_GOOD);
-
-		equipmentCatalogs.add(PROPS_LEVEL1_BAD);
-		equipmentCatalogs.add(PROPS_LEVEL2_BAD);
-		equipmentCatalogs.add(PROPS_LEVEL3_BAD);
-
-		equipmentCatalogs.add(PROPS_LEVEL1_CHAOS);
-
 		equipmentCatalogs.add(TRINKETS);
-		equipmentCatalogs.add(BOOKS);
 		equipmentCatalogs.add(MISC_EQUIPMENT);
-		equipmentCatalogs.add(MINIGAMES);
 	}
 
 	public static ArrayList<Catalog> consumableCatalogs = new ArrayList<>();

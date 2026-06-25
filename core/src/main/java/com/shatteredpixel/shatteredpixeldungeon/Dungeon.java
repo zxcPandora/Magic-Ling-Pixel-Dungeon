@@ -26,6 +26,8 @@ import static com.shatteredpixel.shatteredpixeldungeon.android.AndroidGameRecord
 import static com.shatteredpixel.shatteredpixeldungeon.levels.LevelRules.createBranchLevel;
 import static com.shatteredpixel.shatteredpixeldungeon.levels.LevelRules.createStandardLevel;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
@@ -49,7 +51,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Blacksmith;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.DragonGirlBlue;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.MageHand;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.RedDragon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Wandmaker;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.pets.MiniSaka;
@@ -73,6 +74,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.DeadEndLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.LinkLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.MiningLevel;
+import com.shatteredpixel.shatteredpixeldungeon.levels.NormalZeroFiveLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.RegularLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.ShopBossLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.ZeroCityLevel;
@@ -94,11 +96,13 @@ import com.watabou.noosa.Game;
 import com.watabou.utils.BArray;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
+import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.FileUtils;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import com.watabou.utils.SparseArray;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -107,6 +111,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public class Dungeon {
 	public static boolean whiteDaymode;
@@ -147,6 +153,7 @@ public class Dungeon {
 		SWARM_HP,
 		NECRO_HP,
 		BAT_HP,
+		WORM_HP,
 		HUNR_HP,
 		WARLOCK_HP,
 		ICERAT_HP,
@@ -183,7 +190,9 @@ public class Dungeon {
 		LORE_PRISON,
 		LORE_CAVES,
 		LORE_CITY,
-		LORE_HALLS, PROP_BAG;
+		LORE_HALLS, PROP_BAG,
+		WISP_PHANTOM_FIRE,
+		NSR;
 
 		public int count = 0;
 
@@ -579,6 +588,7 @@ public class Dungeon {
                 && !(Dungeon.level instanceof MiningLevel)
                 && !(Dungeon.level instanceof TheatreLevel)
 				&& !(Dungeon.level instanceof ZeroLevel)
+				&& !(Dungeon.level instanceof NormalZeroFiveLevel)
 				&& !(Dungeon.level instanceof ZeroCityLevel)
                 && !(Dungeon.level instanceof MorpheusBossLevel)
                 && !(Dungeon.level instanceof PacmanHollowActorLevel)
@@ -946,6 +956,12 @@ public class Dungeon {
 
 		Level level = (Level)bundle.get( LEVEL );
 
+		Bundle mainGameBundle = FileUtils.bundleFromFile(GamesInProgress.gameFile(save));
+		if (mainGameBundle.contains("clone_id_shift")){
+			level.mobs.clear();
+			level.heaps.clear();
+		}
+
 		if (level == null){
 			throw new IOException();
 		} else {
@@ -1013,12 +1029,9 @@ public class Dungeon {
 
 	//default to recomputing based on max hero vision, in case vision just shrank/grew
 	public static void observe(){
-		int dist = Math.max(Dungeon.hero.viewDistance, 8 + Statistics.BzmdrCJHeroViewDistance);
+
+		int dist = Math.max(Dungeon.hero.viewDistance, Dungeon.hero.viewDistance + Statistics.BzmdrCJHeroViewDistance);
 		dist *= (int) (1f + 0.25f*Dungeon.hero.pointsInTalent(Talent.FARSIGHT));
-		//TODO 暂时屏蔽笔记效果
-//		if(Dungeon.hero.belongings.getItem(NoteOfBzmdr.class)!=null){
-//			dist *= (int) 0.75;
-//		}
 
 		if (Dungeon.hero.buff(MagicalSight.class) != null){
 			dist = Math.max( dist, MagicalSight.DISTANCE );
@@ -1070,16 +1083,16 @@ public class Dungeon {
 			}
 		}
 
-		if(hero.buff(MageHand.HandWareness.class) != null){
-			for (Mob m : level.mobs.toArray(new Mob[0])){
-				if (m instanceof MageHand) {
-					BArray.or( level.visited, level.heroFOV, m.pos - 1 - level.width(), 3, level.visited );
-					BArray.or( level.visited, level.heroFOV, m.pos - 1, 3, level.visited );
-					BArray.or( level.visited, level.heroFOV, m.pos - 1 + level.width(), 3, level.visited );
-					GameScene.updateFog(m.pos, 2);
-				}
-			}
-		}
+//		if(hero.buff(MageHand.HandWareness.class) != null){
+//			for (Mob m : level.mobs.toArray(new Mob[0])){
+//				if (m instanceof MageHand) {
+//					BArray.or( level.visited, level.heroFOV, m.pos - 1 - level.width(), 3, level.visited );
+//					BArray.or( level.visited, level.heroFOV, m.pos - 1, 3, level.visited );
+//					BArray.or( level.visited, level.heroFOV, m.pos - 1 + level.width(), 3, level.visited );
+//					GameScene.updateFog(m.pos, 2);
+//				}
+//			}
+//		}
 
 		for (Mob m : level.mobs.toArray(new Mob[0])){
 			if (m instanceof BlackSoul) {
@@ -1317,12 +1330,11 @@ public class Dungeon {
 			Ghost		.Quest.storeInBundle( quests );
 			Wandmaker	.Quest.storeInBundle( quests );
 			Blacksmith	.Quest.storeInBundle( quests );
-
 			DragonGirlBlue .Quest.storeInBundle( quests );
-
 			Imp			.Quest.storeInBundle( quests );
-			bundle.put( QUESTS, quests );
 			RedDragon	.Quest.storeInBundle( quests );
+			bundle.put( QUESTS, quests );
+
 			SpecialRoom.storeRoomsInBundle( bundle );
 			SecretRoom.storeRoomsInBundle( bundle );
 
@@ -1390,6 +1402,16 @@ public class Dungeon {
 
 		Actor.clear();
 		Actor.restoreNextID( bundle );
+
+		if (bundle.contains("clone_id_shift")) {
+			int shift = bundle.getInt("clone_id_shift");
+			// 利用 store/restore 间接修改nextID，绕过私有访问限制
+			Bundle tmp = new Bundle();
+			Actor.storeNextID(tmp);
+			int cur = tmp.getInt("next_id");
+			tmp.put("next_id", cur + shift);
+			Actor.restoreNextID(tmp);
+		}
 
 		quickslot.reset();
 		QuickSlotButton.reset();
@@ -1526,5 +1548,39 @@ public class Dungeon {
 		return dlcs.isConducted(mask);
 	}
 
+	public static boolean exportSaveToZipOnly(int srcSlot) {
+		try {
+			FileHandle srcDir = FileUtils.getFileHandle(GamesInProgress.gameFolder(srcSlot));
+			FileHandle[] allSaveFiles = srcDir.list();
+
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			try (ZipOutputStream zos = new ZipOutputStream(baos)) {
+				for (FileHandle fh : allSaveFiles) {
+					ZipEntry entry = new ZipEntry(fh.name());
+					zos.putNextEntry(entry);
+					zos.write(fh.readBytes());
+					zos.closeEntry();
+				}
+			}
+
+			// 外部cards目录
+			FileHandle cardDir;
+			if (DeviceCompat.isDesktop()) {
+				String docPath = "AppData/Roaming/.shatteredpixel/Magic Ling Pixel Dungeon/cards/";
+				cardDir = Gdx.files.external(docPath);
+			} else {
+				cardDir = Gdx.files.external("Cards/");
+			}
+			if (!cardDir.exists()) cardDir.mkdirs();
+
+			// 导出zip命名：backup_slot_源槽位.zip
+			FileHandle zipOutput = cardDir.child("backup_slot_" + srcSlot + ".zip");
+			zipOutput.writeBytes(baos.toByteArray(), false);
+			return true;
+		} catch (Exception e) {
+			ShatteredPixelDungeon.reportException(e);
+			return false;
+		}
+	}
 
 }

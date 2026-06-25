@@ -74,7 +74,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.YogFist;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.hollow.allsearch.HelpTeleportPoint;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.lb.BlackSoul;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Blacksmith;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.MageHand;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Sheep;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Slyl;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.SmallLeafHardDungeon;
@@ -1832,7 +1831,7 @@ public abstract class Level implements Bundlable {
 				mindVisRange = Math.max(mindVisRange, EyeOfNewt.mindVisionRange());
 
 				if (mindVisRange >= 1) {
-					for (Mob mob : Dungeon.level.mobs.toArray(new Mob[0])){
+					for (Mob mob : mobs) {
 						if (mob instanceof Mimic && mob.alignment == Char.Alignment.NEUTRAL&& ((Mimic) mob).stealthy()){
 							continue;
 						}
@@ -1872,7 +1871,7 @@ public abstract class Level implements Bundlable {
 						|| m instanceof SpiritHawk.HawkAlly
 						|| m instanceof SmallLight
 						|| m instanceof HelpTeleportPoint
-                        || m instanceof MageHand || m instanceof BlackSoul){
+                        || m instanceof BlackSoul){
 					if (m.fieldOfView == null || m.fieldOfView.length != length()){
 						m.fieldOfView = new boolean[length()];
 						Dungeon.level.updateFieldOfView( m, m.fieldOfView );

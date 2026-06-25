@@ -54,6 +54,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfForce;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLightning;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.KingSword;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
 import com.shatteredpixel.shatteredpixeldungeon.levels.NewCityBossLevel;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -575,6 +576,13 @@ public class DwarfKing extends Boss {
 		Badges.validateBossSlain();
 		if (Statistics.qualifiedForBossChallengeBadge){
 			Badges.validateBossChallengeCompleted();
+			if(Badges.isUnlocked(Badges.Badge.BOSS_CHALLENGE_4)){
+				if(Random.Float() < 0.18f){
+					Dungeon.level.drop(new KingSword(), pos).sprite.drop();
+				}
+			} else {
+				Dungeon.level.drop(new KingSword(), pos).sprite.drop();
+			}
 		}
 		Statistics.bossScores[3] += 4000;
 
@@ -584,6 +592,10 @@ public class DwarfKing extends Boss {
 		for (Mob m : getSubjects()){
 			m.die(null);
 		}
+
+
+
+
 		Bestiary.skipCountingEncounters = false;
 
 		LloydsBeacon beacon = Dungeon.hero.belongings.getItem(LloydsBeacon.class);

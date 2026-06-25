@@ -58,6 +58,27 @@ public class ShatteredPixelDungeon extends Game {
 	public ShatteredPixelDungeon( PlatformSupport platform ) {
 		super( sceneClass == null ? (!SPDSettings.firebase()) ? EulaScene.class : GoScene.class : sceneClass, platform );
 
+
+		com.watabou.utils.Bundle.addAlias(
+				com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.KingSword.class,
+				"com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.RunicBlade" );
+
+		com.watabou.utils.Bundle.addAlias(
+				com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfAccEvasion.class,
+				" com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfAccuracy" );
+
+		com.watabou.utils.Bundle.addAlias(
+				com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfAccEvasion.class,
+				"com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfEvasion" );
+
+		com.watabou.utils.Bundle.addAlias(
+				com.shatteredpixel.shatteredpixeldungeon.items.rings.RingoOfReTenacity.class,
+				"com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfElements" );
+
+		com.watabou.utils.Bundle.addAlias(
+				com.shatteredpixel.shatteredpixeldungeon.items.rings.RingoOfReTenacity.class,
+				"com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfTenacity" );
+
 		com.watabou.utils.Bundle.addAlias(
 				com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.spdtomlpd.RitualSword.class,
 				"com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Shortsword" );

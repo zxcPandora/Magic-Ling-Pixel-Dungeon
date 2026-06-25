@@ -31,7 +31,6 @@ import static com.shatteredpixel.shatteredpixeldungeon.windows.LevelChecker.SS_S
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.DragonGirlBlue;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.Artifact;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.MagicalHolster;
@@ -389,15 +388,15 @@ public class Badges {
 	public static void validateAncityProgress() {
 		Badge badge = null;
 
-		if (!local.contains( Badge.ANCITY_ONE ) && DragonGirlBlue.Quest.survey_research_points >= 1200) {
+		if (!local.contains( Badge.ANCITY_ONE ) && Statistics.survey_research_points >= 1200) {
 			badge = Badge.ANCITY_ONE;
 			local.add( badge );
 		}
-		if (!local.contains( Badge.ANCITY_TWO ) && DragonGirlBlue.Quest.survey_research_points >= 2400) {
+		if (!local.contains( Badge.ANCITY_TWO ) && Statistics.survey_research_points >= 2400) {
 			badge = Badge.ANCITY_TWO;
 			local.add( badge );
 		}
-		if (!local.contains( Badge.ANCITY_THREE ) && DragonGirlBlue.Quest.survey_research_points >= 4000) {
+		if (!local.contains( Badge.ANCITY_THREE ) && Statistics.survey_research_points >= 4000) {
 			badge = Badge.ANCITY_THREE;
 			local.add( badge );
 		}
@@ -793,17 +792,23 @@ public class Badges {
 		displayBadge( Badge.KILL_MORES );
 	}
 
-	public static void MINIGAME_MASTER_ONE() {
-		displayBadge( Badge.MASTER );
-	}
+	public static void MINIGAME_TOTAL(int level) {
+		Badge badge;
+		switch (level) {
+			case 1: default:
+				badge = Badge.MASTER;
+				break;
+			case 2:
+				badge = Badge.MASTER_TWO;
+				break;
+			case 3:
+				badge = Badge.MASTER_THREE;
+				break;
+		}
 
-	public static void MINIGAME_MASTER_TWO() {
-		displayBadge( Badge.MASTER_TWO );
-	}
-
-	public static void  MINIGAME_MASTER_THREE() {
-		displayBadge( Badge.MASTER_THREE );
-	}
+        local.add(badge);
+        displayBadge(badge);
+    }
 
 	public static void KILL_ST() {
 		displayBadge( Badge.KILL_CLSISTER );
@@ -1179,9 +1184,9 @@ public class Badges {
 
 		KILL_DOG					( 152),
 		KILL_MORES					( 153),
-		MASTER						(154,true,true ),
-		MASTER_TWO				(155,true,false ),
-		MASTER_THREE					(156,true,false ),
+		MASTER						(154),
+		MASTER_TWO						(155),
+		MASTER_THREE					(156),
 		HOLLOWCITY					( 157),
 		WOC_MONEY_GIRL				( 158),
 
@@ -1233,12 +1238,6 @@ public class Badges {
 		Badge( int image, BadgeType type ) {
 			this.image = image;
 			this.type = type;
-		}
-
-		Badge( int image, boolean meta,boolean pacman ) {
-			this.image = image;
-			this.meta = meta;
-			this.pacman = pacman;
 		}
 
 
@@ -1299,6 +1298,14 @@ public class Badges {
 		Iterator<Badge> iterator = badges.iterator();
 		while (iterator.hasNext()) {
 			Badge badge = iterator.next();
+			// ========== 旧存档兼容核心：双重空值判断 ==========
+			// 1. 过滤旧存档生成的 null Badge对象
+			// 2. 过滤旧存档中 type字段为null的Badge对象
+			if (badge == null || badge.type == null) {
+				iterator.remove();
+				continue;
+			}
+			// 原有过滤逻辑
 			if ((!global && badge.type != BadgeType.LOCAL) || badge.type == BadgeType.HIDDEN) {
 				iterator.remove();
 			}
@@ -1307,7 +1314,6 @@ public class Badges {
 		Collections.sort(badges);
 
 		return filterReplacedBadges(badges);
-
 	}
 
 	public static List<Badge> filterReplacedBadges( List<Badge> badges ) {

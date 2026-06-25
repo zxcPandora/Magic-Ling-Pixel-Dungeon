@@ -98,10 +98,12 @@ public class WandOfLightning extends DamageWand {
 	public void onZap(Ballistica bolt) {
 
 		for (Char ch : affected.toArray(new Char[0])){
-			if (ch != curUser && ch.alignment == curUser.alignment && ch.pos != bolt.collisionPos){
-				affected.remove(ch);
-			} else if (ch.buff(LightningCharge.class) != null){
-				affected.remove(ch);
+			if(curUser != null){
+				if (ch != curUser && ch.alignment == curUser.alignment && ch.pos != bolt.collisionPos){
+					affected.remove(ch);
+				} else if (ch.buff(LightningCharge.class) != null){
+					affected.remove(ch);
+				}
 			}
 		}
 
@@ -189,8 +191,10 @@ public class WandOfLightning extends DamageWand {
 
 		int dist = Dungeon.level.water[ch.pos] ? 2 : 1;
 
-		if (curUser.buff(LightningCharge.class) != null){
-			dist++;
+		if(curUser != null){
+			if (curUser.buff(LightningCharge.class) != null){
+				dist++;
+			}
 		}
 
 		ArrayList<Char> hitThisArc = new ArrayList<>();

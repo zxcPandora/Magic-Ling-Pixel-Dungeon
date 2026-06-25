@@ -55,6 +55,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.SDBSword;
 import com.shatteredpixel.shatteredpixeldungeon.levels.ColdChestBossLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -173,7 +174,7 @@ public class DiamondKnight extends Boss implements Hero.Doom {
             super.detach();
             for (Mob m : Dungeon.level.mobs.toArray(new Mob[0])){
                 if (m instanceof DiamondKnight){
-                    m.damage(12, this, DamageType.REAL);
+                    m.damage(12, this);
                 }
             }
         }
@@ -365,6 +366,14 @@ public class DiamondKnight extends Boss implements Hero.Doom {
             if(boss instanceof CrystalMimic) {
                boss.die(true);
             }
+        }
+
+        if(Badges.isUnlocked(Badges.Badge.KILL_SM)){
+            if(Random.Float() < 0.18f){
+                Dungeon.level.drop(new SDBSword(), pos).sprite.drop();
+            }
+        } else {
+            Dungeon.level.drop(new SDBSword(), pos).sprite.drop();
         }
         
         Dungeon.level.unseal();

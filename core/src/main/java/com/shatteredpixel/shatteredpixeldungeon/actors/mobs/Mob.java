@@ -43,6 +43,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bleeding;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ChampionEnemy;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ChampionHero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Charm;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corruption;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Dread;
@@ -86,6 +87,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Wound;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.AntiMagic;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.Viscosity;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.ElectricalSmoke;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.MasterThievesArmband;
@@ -99,6 +101,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.props.NoteOfBzmdr;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.extra.ScrollOfSoul;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfAggression;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ExoticCrystals;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ShardOfOblivion;
@@ -1184,6 +1187,28 @@ public abstract class Mob extends Char {
 			dmg *= 0.5f;
 		}
 
+		ChampionHero.Element doubleBuff = hero.buff(ChampionHero.Element.class);
+		if (doubleBuff != null) {
+			boolean isMagicDamage = type == DamageType.MAGIC || type == DamageType.Element;
+			Class<?> srcCls = src.getClass();
+			for (Class<?> magicCls : AntiMagic.RESISTS) {
+				if (magicCls.isAssignableFrom(srcCls)) {
+					isMagicDamage = true;
+					break;
+				}
+			}
+			if (isMagicDamage) {
+				dmg *= 2;
+			}
+		}
+
+		ScrollOfSoul.UpgradeSoul upgradeSoul = hero.buff(ScrollOfSoul.UpgradeSoul.class);
+		if(upgradeSoul != null){
+			float atkMul = 1f + upgradeSoul.attackDamageMulti / 100f;
+			atkMul = Math.min(1.9f, atkMul);
+			dmg *= atkMul;
+		}
+
 		if (state == SLEEPING) {
 			state = WANDERING;
 		}
@@ -1229,6 +1254,13 @@ public abstract class Mob extends Char {
             if (alignment == Alignment.ENEMY) {
 				Statistics.enemiesSlain++;
 				Badges.validateMonstersSlain();
+
+				ScrollOfSoul.UpgradeSoul upgradeSoul = hero.buff(ScrollOfSoul.UpgradeSoul.class);
+				if(upgradeSoul != null){
+					upgradeSoul.shieldDamageMulti += 2;
+					upgradeSoul.attackDamageMulti += 2;
+				}
+
 				Statistics.qualifiedForNoKilling = false;
 				Bestiary.setSeen(getClass());
 				Bestiary.countEncounter(getClass());
@@ -1317,7 +1349,14 @@ public abstract class Mob extends Char {
 	}
 	
 	public void rollToDropLoot(){
-		if (Dungeon.hero.lvl > maxLvl + 2) return;
+
+		if (lanterfireactive && hero.lanterfire <= 25) {
+			return;
+		}
+
+		if (Dungeon.hero.lvl > maxLvl + 2) {
+			return;
+		}
 
 		MasterThievesArmband.StolenTracker stolen = buff(MasterThievesArmband.StolenTracker.class);
 		if (stolen == null || !stolen.itemWasStolen()) {

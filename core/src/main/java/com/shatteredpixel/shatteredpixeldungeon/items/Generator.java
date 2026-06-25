@@ -122,18 +122,16 @@ import com.shatteredpixel.shatteredpixeldungeon.items.props.YanStudyingPaperOne;
 import com.shatteredpixel.shatteredpixeldungeon.items.props.YanStudyingPaperTwo;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.Pickaxe;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
-import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfAccuracy;
+import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfAccEvasion;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfArcana;
-import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfElements;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfEnergy;
-import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfEvasion;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfForce;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfFuror;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfHaste;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfMight;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfSharpshooting;
-import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfTenacity;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
+import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingoOfReTenacity;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfIdentify;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfLullaby;
@@ -218,10 +216,11 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Glaive;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Gloves;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Greataxe;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Greatsword;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.GreenSword;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.IceFishSword;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.IceLingSword;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.JunglePoison;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Katana;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.KingSword;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.LifeTreeSword;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.LockSword;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Longsword;
@@ -232,7 +231,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MerchantSword
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Rapier;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.RedBloodMoon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.RoundShield;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.RunicBlade;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.SDBSword;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Sai;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Scimitar;
@@ -599,21 +597,19 @@ public class Generator {
 
 					Dairikyan.class,
 					MagicTorch.class,
-					GreenSword.class,
-
-					SDBSword.class,
+					JunglePoison.class,
 
 					LifeTreeSword.class,
-
-					//MoonDao.class,
 			};
-			WEP_T3.probs = new float[]{1, 5, 4, 4, 4, 3, 5, 3, 6, 0, 0, 0};
+			WEP_T3.probs = new float[]{1, 5, 4, 4, 4, 3, 5, 3, 6,
+					Badges.isUnlocked(Badges.Badge.KILL_CLSISTER) ? 3 : 0,
+					0};
 
 			WEP_T4.classes = new Class<?>[]{
 					Longsword.class,
 					BattleAxe.class,
 					Flail.class,
-					RunicBlade.class,
+
 					AssassinsBlade.class,
 					Crossbow.class,
 					Katana.class,
@@ -625,13 +621,19 @@ public class Generator {
 					MoonDao.class,
 					GoldLongGun.class,
 
-					DogDogMusic.CICREMUSIC.class
+					DogDogMusic.CICREMUSIC.class,
+
+					SDBSword.class,
+					KingSword.class
 			};
-			WEP_T4.probs = new float[]{6, 5, 5, 4, 4, 4, 2, 3, 7,
+			WEP_T4.probs = new float[]{6, 5, 4, 4, 4, 2, 3, 7,
 					SPDSettings.isItemUnlock(RedBloodMoon.class.getSimpleName()) ? 4f : 0,
 					SPDSettings.isItemUnlock(MoonDao.class.getSimpleName()) ? 4f : 0,
 					SPDSettings.isItemUnlock(GoldLongGun.class.getSimpleName()) ? 4f : 0,
 					SPDSettings.isItemUnlock("DogDogLingDang") ? 4f : 0,
+
+					Badges.isUnlocked(Badges.Badge.KILL_SM) ? 3 : 0,
+					Badges.isUnlocked(Badges.Badge.BOSS_CHALLENGE_4) ? 3 : 0,
 			};
 
 			WEP_T5.classes = new Class<?>[]{
@@ -652,8 +654,8 @@ public class Generator {
 					SaiPlus.class,
 					DragonShiled.class,
 					KingAxe.class,
-					RiceSword.class,
 					Gauntlet.class,
+					RiceSword.class,
 					ClearSword.class,
 					ForestBow.class,
 
@@ -665,7 +667,15 @@ public class Generator {
 			PaswordBadges.loadGlobal();
 			List<PaswordBadges.Badge> passwordbadges = PaswordBadges.filtered(true);
 
-			WEP_T5.probs = new float[]{0, 3, 3, 3, 3, 3, 3, 4, SPDSettings.isItemUnlock(DiedCrossBow.class.getSimpleName()) ? 1.5f : 0, 2, SPDSettings.isItemUnlock(SaiPlus.class.getSimpleName()) ? 3f : 0, 0, SPDSettings.KillDwarf() ? 3f : 0, 4, passwordbadges.contains(PaswordBadges.Badge.UNLOCK_RICESWORD) ? 4f : SPDSettings.isItemUnlock(RiceSword.class.getSimpleName()) ? 4f : 0,
+			WEP_T5.probs = new float[]{0, 3, 3, 3, 3, 3, 3, 4,
+					SPDSettings.isItemUnlock(DiedCrossBow.class.getSimpleName()) ? 1.5f : 0,
+					2,
+					SPDSettings.isItemUnlock(SaiPlus.class.getSimpleName()) ? 3f : 0,
+					0,
+					SPDSettings.KillDwarf() ? 3f : 0,
+					4,
+					passwordbadges.contains(PaswordBadges.Badge.UNLOCK_RICESWORD) ? 4f : SPDSettings.isItemUnlock(RiceSword.class.getSimpleName()) ? 4f : 0,
+
 					SPDSettings.isItemUnlock(ClearSword.class.getSimpleName()) ? 5f : 0,
 					SPDSettings.isItemUnlock(ForestBow.class.getSimpleName()) ? 0f : 0,
 					5,
@@ -749,7 +759,7 @@ public class Generator {
 			Lunar lunar = date.getLunar();
 
 			boolean isZYJ = lunar.getMonth() == 7 && (lunar.getDay() >= 15 && lunar.getDay() <= 15 + 7);
-			int isDWJ = chinaHoliday == RegularLevel.ChinaHoliday.DWJ ? 3 : 0;
+			float isDWJ = chinaHoliday == RegularLevel.ChinaHoliday.DWJ ? 0.85f : 0;
 
 			int ZYJ = isZYJ ? 1 : 0;
 
@@ -770,19 +780,22 @@ public class Generator {
 			FOOD.probs = new float[]{4, 1, 0, isDWJ, isDWJ, isDWJ, isDWJ, isDWJ, ZYJ, ZYJ};
 
 			RING.classes = new Class<?>[]{
-					RingOfAccuracy.class,
+					//RingOfAccuracy.class,
 					RingOfArcana.class,
-					RingOfElements.class,
+					//RingOfElements.class,
 					RingOfEnergy.class,
-					RingOfEvasion.class,
+					//RingOfEvasion.class,
 					RingOfForce.class,
 					RingOfFuror.class,
 					RingOfHaste.class,
 					RingOfMight.class,
 					RingOfSharpshooting.class,
-					RingOfTenacity.class,
-					RingOfWealth.class};
-			RING.defaultProbs = new float[]{3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3};
+					//RingOfTenacity.class,
+					RingOfWealth.class,
+
+					RingoOfReTenacity.class,
+					RingOfAccEvasion.class};
+			RING.defaultProbs = new float[]{3, 3, 3, 3, 3, 3, 3, 3, 3, 3};
 			RING.probs = RING.defaultProbs.clone();
 
 			ARTIFACT.classes = new Class<?>[]{
@@ -805,7 +818,11 @@ public class Generator {
 					ElectricalSmoke.class,
 					MagneticCrown.class
 			};
-			ARTIFACT.defaultProbs = new float[]{0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0};
+			ARTIFACT.defaultProbs = new float[]{
+					Badges.isUnlocked(Badges.Badge.KILL_DM720) ? 1:0
+					, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1,
+					Badges.isUnlocked(Badges.Badge.YASD) ? 1:0
+			};
 			ARTIFACT.probs = ARTIFACT.defaultProbs.clone();
 
 			//Trinkets are unique like artifacts, but unlike them you can only have one at once

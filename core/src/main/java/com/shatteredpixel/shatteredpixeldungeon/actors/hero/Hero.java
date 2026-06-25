@@ -129,6 +129,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Slow;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.SnipersMark;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.WaterSoulX;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.status.AncientStats;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.status.BloodLoss;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.status.MagicAbsorb;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.status.NightorDay;
@@ -253,6 +254,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfChallenge;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.extra.ScrollOfSoul;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.extra.ScrollOfTeleTation;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ThirteenLeafClover;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
@@ -275,6 +277,8 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.spdtomlpd.Tre
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
+import com.shatteredpixel.shatteredpixeldungeon.levels.AncientMysteryCityBossLevel;
+import com.shatteredpixel.shatteredpixeldungeon.levels.AncientMysteryCityLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.MiningLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.NewZeroFiveLevel;
@@ -744,6 +748,8 @@ public class Hero extends Char {
 				return 10;
 			case 4:
 				return 13;
+			case 5:
+				return 14;
 		}
 
 		if (armor instanceof ClassArmor){
@@ -1100,11 +1106,17 @@ public class Hero extends Char {
 			speed += CustomPlayer.baseSpeed;
 		}
 
+
+
 		speed += super.speed();
 
 		speed *= RingOfHaste.speedMultiplier(this);
 
 		if (buff(BlessQinyue.class) != null) speed *= 1.25f;
+
+		if(buff(ScrollOfSoul.UpgradeSoul.class)!=null){
+			speed *= 2;
+		}
 
 		//提升20%移速
 		MIME.GOLD_THREE getSpeed = hero.belongings.getItem(MIME.GOLD_THREE.class);
@@ -1209,6 +1221,12 @@ public class Hero extends Char {
 		}
 
 		float delay = 1f;
+
+
+		if(buff(ScrollOfSoul.UpgradeSoul.class)!=null){
+			delay /= 2;
+		}
+
 		if( Dungeon.isDLC(Conducts.Conduct.DEV) && CustomPlayer.overrideGame ){
 			if(!CustomPlayer.shouldOverride)
 				delay = CustomPlayer.baseAttackDelay;
@@ -1287,6 +1305,12 @@ public class Hero extends Char {
 				if (isNegative) {
 					GLog.p(Messages.get(FaintGlimmer.class, "light", count,remainingLevel));
 				}
+			}
+		}
+
+		if(level instanceof AncientMysteryCityLevel || level instanceof AncientMysteryCityBossLevel){
+			if(buff(AncientStats.class) == null){
+				Buff.affect(this, AncientStats.class).set((100), 1);
 			}
 		}
 
@@ -1401,7 +1425,7 @@ public class Hero extends Char {
 
 		BzmdrNewYears.BzmdrGift bzmdrGift = hero.belongings.getItem(BzmdrNewYears.BzmdrGift.class);
 		if(bzmdrGift != null){
-			viewDistance = 8 + Statistics.BzmdrCJHeroViewDistance;
+			viewDistance = level.viewDistance + Statistics.BzmdrCJHeroViewDistance;
 		}
 
 		MageHand.MageHandControl m = hero.belongings.getItem(MageHand.MageHandControl.class);
@@ -1648,7 +1672,6 @@ public class Hero extends Char {
 
 		checkVisibleMobs();
 		BuffIndicator.refreshHero();
-		BuffIndicator.refreshBoss();
 
 		if (paralysed > 0) {
 
@@ -2426,6 +2449,11 @@ public class Hero extends Char {
 			damage = belongings.armor().proc( enemy, this, damage );
 		}
 
+		CapeOfThorns.Thorns recharge = buff(CapeOfThorns.Thorns.class);
+		if (recharge != null) {
+			recharge.onDamageTaken(damage);
+		}
+
 		WandOfLivingEarth.RockArmor rockArmor = buff(WandOfLivingEarth.RockArmor.class);
 		if (rockArmor != null) {
 			damage = rockArmor.absorb(damage);
@@ -2455,7 +2483,7 @@ public class Hero extends Char {
 
 	@Override
 	public void damage( int dmg, Object src ) {
-		damage(dmg, src , DamageType.MAGIC);
+		damage(dmg, src , null);
 	}
 
 	@Override
@@ -2464,6 +2492,14 @@ public class Hero extends Char {
 		if(hero.belongings.getItem(EmotionalAggregation.class)!=null && Random.Float()>0.90f ){
 			GLog.n(Messages.get(EmotionalAggregation.class,"block"));
 			return;
+		}
+
+		ChampionHero.Element doubleBuff = buff(ChampionHero.Element.class);
+		if (doubleBuff != null) {
+			boolean isMagicDamage = type == DamageType.MAGIC || type == DamageType.Element;
+			if (isMagicDamage) {
+				return;
+			}
 		}
 
 		if(hasTalent(Talent.BLOOD_RIVER)){
@@ -2483,7 +2519,7 @@ public class Hero extends Char {
 		if(hero.belongings.getItem(WenStudyingPaperOne.class)!=null) {
 			PropBuff props = hero.buff(PropBuff.class);
 			if(props != null) {
-				if(props.timeB >=7 && type != DamageType.HG){
+				if(props.timeB >=7 && (type != DamageType.HG)){
 					if (HT / 2 >= HP) {
 						Buff.affect(hero, Swiftthistle.TimeBubble.class).setLeft(5f);
 					} else {
@@ -2501,7 +2537,7 @@ public class Hero extends Char {
 			dmg = (int) Math.ceil(dmg * 0.96);
 		}
 
-		if(hero.belongings.getItem(EmotionalAggregationB.class)!=null && !(src instanceof Buff) && !(src instanceof Blob)){
+		if(hero.belongings.getItem(EmotionalAggregationB.class)!=null && !(src instanceof Buff) && !(src instanceof Blob) && !(AntiMagic.RESISTS.contains(src.getClass()))){
 			dmg += (int) getZone()*2 -1;
 		}
 
@@ -2536,9 +2572,21 @@ public class Hero extends Char {
 			}
 		}
 
+		ScrollOfSoul.UpgradeSoul upgradeSoul = hero.buff(ScrollOfSoul.UpgradeSoul.class);
+		if(upgradeSoul != null){
+			float atkMul = 1f + upgradeSoul.shieldDamageMulti / 100f;
+			atkMul = Math.min(0.1f, atkMul);
+			dmg *= atkMul;
+		}
+
 		CapeOfThorns.Thorns thorns = buff( CapeOfThorns.Thorns.class );
+
+		CapeOfThorns.ThornsTime thornsTime = buff(CapeOfThorns.ThornsTime.class);
+
 		if (thorns != null) {
-			dmg = thorns.proc(dmg, (src instanceof Char ? (Char)src : null),  this);
+			if(thornsTime != null){
+				dmg = thorns.proc(dmg, (src instanceof Char ? (Char)src : null));
+			}
 		}
 
 		Talent.WarriorFoodImmunity thornsTalent = buff( Talent.WarriorFoodImmunity.class );
@@ -4149,8 +4197,23 @@ public class Hero extends Char {
 
 	@Override
 	public float talentProc(){
-		if (hasTalent(Talent.RUNIC_TRANSFERENCE) && (pointsInTalent(Talent.RUNIC_TRANSFERENCE)>1)) return 1.25f;
-		return super.talentProc();
+		int pt = pointsInTalent(Talent.RUNIC_TRANSFERENCE);
+		boolean isWarrior = heroClass == HeroClass.WARRIOR;
+
+		boolean valid = false;
+		if (hasTalent(Talent.RUNIC_TRANSFERENCE)){
+			if (!isWarrior && pt >= 1) valid = true;
+			if (isWarrior && pt > 1) valid = true;
+		}
+
+		if (!valid) return super.talentProc();
+
+		float base = 1.25f;
+		float extra = 0f;
+		if (!isWarrior){
+			if (pt == 1) extra = -0.15f;
+		}
+		return base + extra;
 	}
 
 	private boolean warriorDeathWindowShown = false;

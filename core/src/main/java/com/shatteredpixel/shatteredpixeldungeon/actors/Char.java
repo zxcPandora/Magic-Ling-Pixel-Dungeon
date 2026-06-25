@@ -30,6 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Electricity;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.RotGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.StormCloud;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ToxicGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.VenomGas;
@@ -62,7 +63,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Frost;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FrostBurning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FrostImbue;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Fury;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.HaloFireImBlue;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.HalomethaneBurning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Haste;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.HasteLing;
@@ -126,6 +126,8 @@ import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.AntiMagic;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.Potential;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.Viscosity;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.Artifact;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.CapeOfThorns;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.CloakOfShadows;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.DriedRose;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
@@ -183,7 +185,6 @@ import com.watabou.utils.Random;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 
@@ -922,9 +923,9 @@ public abstract class Char extends Actor {
 		if ( buff( Adrenaline.class ) != null) speed *= 2f;
 		if ( buff( Haste.class ) != null) speed *= 3f;
 
-		if ( buff(HasteLing.class) != null) speed *= 3f;
+		if (buff(HasteLing.class) != null) speed *= 3f;
 
-        if(buff(WorstBlizzard.class)!=null) speed *= buff(WorstBlizzard.class).speedFactor();
+		if (buff(WorstBlizzard.class)!=null) speed *= buff(WorstBlizzard.class).speedFactor();
 
 		if ( buff( Dread.class ) != null) speed *= 2f;
 		return speed;
@@ -953,7 +954,7 @@ public abstract class Char extends Actor {
 	}
 
 	public void damage( int dmg, Object src){
-		damage(dmg,src, DamageType.MAGIC);
+		damage(dmg,src, null);
 	}
 
 	public void damage( int dmg, Object src, DamageType type ) {
@@ -1055,13 +1056,35 @@ public abstract class Char extends Actor {
 		dmg = processDamageReduction(dmg, src, attackerHero);
 		/*** 伤害减免 ***/
 
+
+
+		CapeOfThorns.ThornsTime thornsTime = buff(CapeOfThorns.ThornsTime.class);
+
+		Artifact artR = hero.belongings.artifact instanceof CapeOfThorns ? hero.belongings.artifact : null;
+		artR = hero.belongings.misc instanceof CapeOfThorns ? (Artifact) hero.belongings.misc : artR;
+		if(artR != null && artR.cursed && src != hero){
+			Buff.affect( hero, Bleeding.class ).set( (float) dmg /5 );
+		} else if(thornsTime != null){
+			Artifact art = thornsTime.getEquippedArtifact();
+			if (art != null) {
+				float drPct = thornsTime.damageReductionPercent();
+				if (drPct > 0) {
+					int reduced = Math.round(dmg * drPct);
+					dmg -= reduced;
+					if (dmg < 0) dmg = 0;
+					sprite.showStatus(CharSprite.POSITIVE, Messages.get(CapeOfThorns.ThornsTime.class, "block", reduced));
+				}
+			}
+		}
+
+
 		if (buff( Paralysis.class ) != null) {
 			buff( Paralysis.class ).processDamage(dmg);
 		}
 
 		int shielded = dmg;
 		//FIXME: when I add proper damage properties, should add an IGNORES_SHIELDS property to use here.
-		if (!(src instanceof Hunger)){
+		if (!(src instanceof Hunger) && !(type == DamageType.REAL)){
 			for (ShieldBuff s : buffs(ShieldBuff.class)){
 				dmg = s.absorbDamage(dmg);
 				if (dmg == 0) break;
@@ -1113,7 +1136,9 @@ public abstract class Char extends Actor {
 				icon = FloatingText.PHYS_DMG;
 			} else if(type == DamageType.MAGIC){
 				icon = FloatingText.MAGIC_DMG;
-            }
+            } else if(type == DamageType.REAL){
+				icon = FloatingText.TRUE_DAMAGE;
+			}
 
 			if (NO_ARMOR_PHYSICAL_SOURCES.contains(src.getClass()))     icon = FloatingText.PHYS_DMG_NO_BLOCK;
 			if (AntiMagic.RESISTS.contains(src.getClass()))             icon = FloatingText.MAGIC_DMG;
@@ -1154,7 +1179,7 @@ public abstract class Char extends Actor {
 			if (src instanceof Bleeding || src instanceof BloodLoss) {
 				icon = IconFloatingText.BLEEDING;
 			}
-			if (src instanceof ToxicGas) {
+			if (src instanceof ToxicGas || src instanceof RotGas) {
 				icon = IconFloatingText.TOXIC;
 			}
 			if (src instanceof CrivusFruits.DiedBlobs) {
@@ -1233,7 +1258,6 @@ public abstract class Char extends Actor {
 		}
 
 		boolean hasKillEye = hero.belongings != null && hero.belongings.getItem(KillEye.class) != null;
-		boolean hasWandOfDist = src instanceof WandOfDisintegration;
 		if (hasKillEye) {
 			if (this instanceof Mob) {
 				Mob mobTarget = (Mob) this;
@@ -1242,10 +1266,6 @@ public abstract class Char extends Actor {
 					return dmg;
 				}
 			}
-		}
-
-		if(hasWandOfDist){
-			return dmg;
 		}
 
 		return calculateNormalDamageReduction(dmg, src);
@@ -1263,8 +1283,10 @@ public abstract class Char extends Actor {
 			dmg = (int) Math.ceil(dmg * buff.damageTakenFactor());
 		}
 
-		for (ChampionEnemy buff : buffs(ChampionEnemy.class)) {
-			dmg = (int) Math.ceil(dmg * buff.damageTakenFactor());
+		if(! (src instanceof WandOfDisintegration) ){
+			for (ChampionEnemy buff : buffs(ChampionEnemy.class)) {
+				dmg = (int) Math.ceil(dmg * buff.damageTakenFactor());
+			}
 		}
 
 		Class<?> srcClass = src.getClass();
@@ -1624,8 +1646,7 @@ public abstract class Char extends Actor {
 		LARGE,
 		IMMOVABLE ( new HashSet<Class>(),
 				new HashSet<Class>( Arrays.asList(Vertigo.class) )),
-		NOBIG(new HashSet<Class>(),
-				new HashSet<Class>(Collections.singletonList(HaloFireImBlue.class))),
+		NOBIG,
 		NPC,
 		HUNTER,
 		MIMIC,
@@ -1635,6 +1656,7 @@ public abstract class Char extends Actor {
 		UNKNOWN,
 		GODCRACK,
 		UNLESS,
+		TUMULUS,
 		SEARCH,
 		//A character that acts in an unchanging manner. immune to AI state debuffs or stuns/slows
 		STATIC( new HashSet<Class>(),

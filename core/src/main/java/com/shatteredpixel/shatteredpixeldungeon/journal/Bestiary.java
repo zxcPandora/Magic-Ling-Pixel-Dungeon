@@ -124,6 +124,10 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.spical.GnollHero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.spical.GreenSlting;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.spical.SkyDead;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.spical.SuccubusQueen;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.GraveRat;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.NecroScout;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.Wisp;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.Worm;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.DriedRose;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.CorpseDust;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLivingEarth;
@@ -181,6 +185,7 @@ import com.shatteredpixel.shatteredpixeldungeon.plants.Stormvine;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Sungrass;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Swiftthistle;
 import com.watabou.utils.Bundle;
+import com.watabou.utils.DeviceCompat;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -209,6 +214,8 @@ public enum Bestiary {
 	ANCIENT_CITY,
 	MINIGAMES,
 	ANCIENT_CITY_BOSS,
+
+	TUMULUS,
 
 	UNIVERSAL,
 	QUEST,
@@ -411,7 +418,22 @@ public enum Bestiary {
 				MyCoreHeart.class
 				);
 
+		//古墓测试
+		TUMULUS.addEntities(
+				DeviceCompat.isDebug()
+						? new Class<?>[]{GraveRat.class, Worm.class, Wisp.class, NecroScout.class}
+						: new Class<?>[]{Albino.class,
+						Salamander.class,
+						SRPDHBLR.class, NewBlackHost.class,
+						Bandit.class, SpectralNecromancer.class,
+						ArmoredBrute.class, DM201.class, MolotovHuntsman.class,
+						Elemental.ChaosElemental.class, Senior.class,
+						Acidic.class,
 
+						TormentedSpirit.class, PhantomPiranha.class,
+						CrystalMimic.class, ArmoredStatue.class}
+		);
+		
 
 		UNIVERSAL.addEntities(Wraith.class, Piranha.class, Mimic.class, GoldenMimic.class, EbonyMimic.class,  GreenDiamndMimic.class,Statue.class, GuardianTrap.Guardian.class, SentryRoom.Sentry.class);
 

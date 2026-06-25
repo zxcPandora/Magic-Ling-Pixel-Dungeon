@@ -34,6 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bombs.WoollyBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.books.Books;
 import com.shatteredpixel.shatteredpixeldungeon.items.books.bookslist.BrokenBooks;
 import com.shatteredpixel.shatteredpixeldungeon.items.books.bookslist.DeepBloodBooks;
+import com.shatteredpixel.shatteredpixeldungeon.items.books.bookslist.ElementYearBooks;
 import com.shatteredpixel.shatteredpixeldungeon.items.books.bookslist.GrassKingBooks;
 import com.shatteredpixel.shatteredpixeldungeon.items.books.bookslist.HellFireBooks;
 import com.shatteredpixel.shatteredpixeldungeon.items.books.bookslist.IceCityBooks;
@@ -120,6 +121,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfFlameCurse
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfGolems;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfRoseShiled;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.extra.ScrollOfSoul;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Alchemize;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.BeaconOfReturning;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.CurseInfusion;
@@ -230,6 +232,7 @@ public class SpawnMisc extends TestItem {
             scrollList.add(ScrollOfRoseShiled.class);
             scrollList.add(ScrollOfFlameCursed.class);
             scrollList.add(ScrollOfGolems.class);
+            scrollList.add(ScrollOfSoul.class);
         }
 
         if(exoticScrollList.isEmpty()) {
@@ -343,8 +346,10 @@ public class SpawnMisc extends TestItem {
             bookList.add(HollowCityBook.class);
             bookList.add(DeepBloodBooks.class);
             bookList.add(DimandBook.class);
-            bookList.add(DeYiZiBooks.class);
+            bookList.add(ElementYearBooks.class);
             bookList.add(MoneyMoreBooks.class);
+
+            bookList.add(DeYiZiBooks.class);
             bookList.add(PinkRandomBooks.class);
             bookList.add(HellFireBooks.class);
             bookList.add(YellowSunBooks.class);

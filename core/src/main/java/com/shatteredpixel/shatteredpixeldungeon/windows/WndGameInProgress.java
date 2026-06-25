@@ -21,8 +21,6 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
-import static com.shatteredpixel.shatteredpixeldungeon.Dungeon.hero;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Clipboard;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
@@ -227,18 +225,71 @@ public class WndGameInProgress extends Window {
 		}
 		
 		pos += GAP;
-		
+
 		RedButton cont = new RedButton(Messages.get(this, "continue")){
 			@Override
 			protected void onClick() {
 				super.onClick();
-				
-				GamesInProgress.curSlot = slot;
-				
-				hero = null;
-				ActionIndicator.action = null;
-				InterlevelScene.mode = InterlevelScene.Mode.CONTINUE;
-				ShatteredPixelDungeon.switchScene(InterlevelScene.class);
+				final GamesInProgress.Info currInfo = info;
+				final int targetSlot = slot;
+				final long NEW_BASE_VER = 2026061900L;
+				boolean oldSave;
+				try {
+					Bundle bundle = FileUtils.bundleFromFile(GamesInProgress.gameFile(targetSlot));
+					long initVer = bundle.contains("init_ver") ? bundle.getLong("init_ver") : 0;
+					oldSave = initVer < NEW_BASE_VER;
+				} catch (IOException e) {
+					oldSave = true;
+				}
+
+				if (oldSave) {
+					ShatteredPixelDungeon.scene().add(new WndOptions(
+							Icons.get(Icons.WARNING),
+							Messages.get(WndGameInProgress.class, "old_save_title"),
+							Messages.get(WndGameInProgress.class, "old_save_desc"),
+							Messages.get(WndGameInProgress.class, "convert_save"),
+							Messages.get(WndGameInProgress.class,"enter"),
+							Messages.get(WndGameInProgress.class, "cancel")
+					) {
+						@Override
+						protected void onSelect(int index) {
+							if (index == 0) {
+								// 只打包导出，不新建存档槽
+								boolean success = Dungeon.exportSaveToZipOnly(targetSlot);
+								if (success) {
+									ShatteredPixelDungeon.scene().addToFront(new WndOptions(
+											Icons.get(Icons.JOURNAL),
+											Messages.get(WndGameInProgress.class, "extract_success"),
+											Messages.get(WndGameInProgress.class, "extract_success_desc"),
+											Messages.get(WndGameInProgress.class, "confirm")
+									){});
+								} else {
+									ShatteredPixelDungeon.scene().addToFront(new WndOptions(
+											Icons.get(Icons.WARNING),
+											Messages.get(WndGameInProgress.class, "extract_fail"),
+											Messages.get(WndGameInProgress.class, "extract_fail_desc"),
+											Messages.get(WndGameInProgress.class, "confirm")
+									){});
+								}
+							} else if(index == 1){
+								// 仍然进入旧存档
+								GamesInProgress.curSlot = targetSlot;
+								GamesInProgress.selectedClass = currInfo.heroClass;
+								ActionIndicator.action = null;
+								InterlevelScene.mode = InterlevelScene.Mode.CONTINUE;
+								ShatteredPixelDungeon.switchScene(InterlevelScene.class);
+							}
+							// index == 2 取消，不执行任何操作
+						}
+					});
+				} else {
+					// 新版本存档直接正常进入
+					GamesInProgress.curSlot = targetSlot;
+					GamesInProgress.selectedClass = currInfo.heroClass;
+					ActionIndicator.action = null;
+					InterlevelScene.mode = InterlevelScene.Mode.CONTINUE;
+					ShatteredPixelDungeon.switchScene(InterlevelScene.class);
+				}
 			}
 		};
 		
