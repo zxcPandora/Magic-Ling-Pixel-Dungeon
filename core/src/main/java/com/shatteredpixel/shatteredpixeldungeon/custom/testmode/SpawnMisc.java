@@ -48,6 +48,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.books.playbookslist.MoneyM
 import com.shatteredpixel.shatteredpixeldungeon.items.books.playbookslist.PinkRandomBooks;
 import com.shatteredpixel.shatteredpixeldungeon.items.books.questbookslist.DimandBook;
 import com.shatteredpixel.shatteredpixeldungeon.items.books.questbookslist.HollowCityBook;
+import com.shatteredpixel.shatteredpixeldungeon.items.books.questbookslist.TombReachBook;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Berry;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Blandfruit;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Cake;
@@ -74,6 +75,9 @@ import com.shatteredpixel.shatteredpixeldungeon.items.food.hollow.Gelatin;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.hollow.Sugar;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.hollow.Sugar_Block;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.hollow.WhiteSugar_B;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.tomb.CookGraveMeat;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.tomb.FrozenGraveMeat;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.tomb.GraveMeat;
 import com.shatteredpixel.shatteredpixeldungeon.items.lightblack.OilLantern;
 import com.shatteredpixel.shatteredpixeldungeon.items.lightblack.OilPotion;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
@@ -334,6 +338,10 @@ public class SpawnMisc extends TestItem {
 
             foodList.add(QieCake.class);
             foodList.add(RiceCake.class);
+
+            foodList.add(GraveMeat.class);
+            foodList.add(FrozenGraveMeat.class);
+            foodList.add(CookGraveMeat.class);
         }
 
         //Book
@@ -343,9 +351,9 @@ public class SpawnMisc extends TestItem {
             bookList.add(GrassKingBooks.class);
             bookList.add(IceCityBooks.class);
             bookList.add(NoKingMobBooks.class);
-            bookList.add(HollowCityBook.class);
+
             bookList.add(DeepBloodBooks.class);
-            bookList.add(DimandBook.class);
+
             bookList.add(ElementYearBooks.class);
             bookList.add(MoneyMoreBooks.class);
 
@@ -354,6 +362,10 @@ public class SpawnMisc extends TestItem {
             bookList.add(HellFireBooks.class);
             bookList.add(YellowSunBooks.class);
             bookList.add(BzmdrBooks.class);
+
+            bookList.add(HollowCityBook.class);
+            bookList.add(DimandBook.class);
+            bookList.add(TombReachBook.class);
         }
 
         //Trinket

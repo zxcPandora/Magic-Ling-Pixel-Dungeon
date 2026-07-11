@@ -886,6 +886,10 @@ public class ItemSpriteSheet {
 
     public static final int Flower_Cake = QUEST+26;
 
+    public static final int GraveMeat = QUEST+29;
+    public static final int FrozenGraveMeat = QUEST+28;
+    public static final int CookGraveMeat = QUEST+30;
+
     static{
         assignItemRect(Dragon_Lei,   9, 14);
 
@@ -916,6 +920,10 @@ public class ItemSpriteSheet {
         assignItemRect(Qie_Cake,    14, 11);
         assignItemRect(Rice_Cake,    11, 9);
         assignItemRect(Flower_Cake,  16,15);
+
+        assignItemRect(FrozenGraveMeat,  14,13);
+        assignItemRect(GraveMeat,  14,13);
+        assignItemRect(CookGraveMeat,  12,13);
     }
 
     //传奇武器
@@ -960,6 +968,7 @@ public class ItemSpriteSheet {
 
     public static final int	DG13				= BAGS+20;
 
+    public static final int REACH_TOMB           = BAGS+25;
     public static final int SHOP_DIED           = BAGS+27;
     public static final int	DG21				= BAGS+28;
 
@@ -1353,6 +1362,8 @@ public class ItemSpriteSheet {
 
     public static final int MAGNETIC_CROWN  = PROJECTILES + 15;
 
+    public static final int BULLET  = PROJECTILES + 17;
+
 
     static{
         assignItemRect(PROJECTILES_STAR,       9, 9);
@@ -1368,7 +1379,7 @@ public class ItemSpriteSheet {
 
         assignItemRect(MAGNETIC_CROWN,            14, 13);
 
-
+        assignItemRect(BULLET,            11, 11);
     }
 
     public static final int RITUAL_SWORD        =                               xy(1, 60);

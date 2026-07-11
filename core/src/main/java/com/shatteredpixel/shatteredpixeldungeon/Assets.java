@@ -59,6 +59,8 @@ public class Assets {
 		public static final String SliceDeadRoom_MapLua 	= "lua/slicetan.lua";
 
 		public static final String FocuRoom_MapLua      = "lua/focu_room.lua";
+
+		public static final String Tomb_DemonRoom_MapLua      = "lua/tomb/demonshoproom.lua";
 	}
 
 	public static class Environment {
@@ -87,6 +89,9 @@ public class Assets {
 		public static final String HALL_PO  = "environment/custom_tiles/hall_above.png";
 		public static final String HALL_POX  = "environment/custom_tiles/hall_above_b.png";
 
+		public static final String TOMB_ENTR  = "environment/custom_tiles/tombhall_entrance.png";
+		public static final String TOMB_HALL  = "environment/custom_tiles/tomb_hall.png";
+		public static final String TOMB_ROAD  = "environment/custom_tiles/palace_aisle.png";
 
 		public static final String CITY_PO  = "environment/custom_tiles/parliament_above.png";
 		public static final String CITY_POX  = "environment/custom_tiles/parliament_before_behind.png";
@@ -171,7 +176,7 @@ public class Assets {
 		public static final String WATER_ZERO  = "environment/water_zero.png";
 
 		public static final String WATER_PLACE  = "environment/water_palace.png";
-		public static final String WATER_TOMB   = "environment/water_tomb..png";
+		public static final String WATER_TOMB   = "environment/water_tomb.png";
 
 		public static final String WEAK_FLOOR       = "environment/custom_tiles/weak_floor.png";
 		public static final String SEWER_BOSS       = "environment/custom_tiles/sewer_boss.png";
@@ -339,6 +344,9 @@ public class Assets {
 
 		public static final String LOADING_THRATRE   = "interfaces/loading_theatre.png";
 
+		public static final String LOADING_TOMB    = "interfaces/loading_tomb.png";
+		public static final String LOADING_PALACE    = "interfaces/loading_palace.png";
+
 		public static final String BUFFS_SMALL      = "interfaces/buffs.png";
 		public static final String BUFFS_LARGE      = "interfaces/large_buffs.png";
 
@@ -394,7 +402,7 @@ public class Assets {
 		public static final String HALLS_BOSS   = "music/boss/Boss5.ogg";
 
 		public static final String WEIGHTLESS    = "music/weightless.ogg";
-
+		public static final String TOMB_CACHE = "music/tomb_cache.mp3";
 
         public static final String NBPL = "music/nbpl.ogg";
         public static final String THEME_FINALE = "music/theme_finale.ogg";
@@ -822,10 +830,24 @@ public class Assets {
 		public static final String ARCHETTO	= "sprites/npc/avrt.png";
 
 		//TOMB
+
+		//NPC
+		public static final String GORE	= "sprites/tumulus/npc/gore.png";
+
 		public static final String GRAVERAT	= "sprites/tumulus/rat_graveyard.png";
 		public static final String WORM	= "sprites/tumulus/tomb_worm.png";
 		public static final String WISP	= "sprites/tumulus/wisp.png";
 		public static final String NECRO_SCOUT	= "sprites/tumulus/necro_scout.png";
+		public static final String THIEF_SOUL	= "sprites/tumulus/tomb_robber.png";
+
+		//CHURCH
+		public static final String NECRO_ARCHER	= "sprites/tumulus/necro_arbalester.png";
+		public static final String NECRO_GUARD	= "sprites/tumulus/necro_soldier.png";
+		public static final String NECRO_APPREN	= "sprites/tumulus/nec_acolyte.png";
+
+		public static final String BONE_BEAST	= "sprites/tumulus/bone_beast.png";
+		public static final String SHARD	= "sprites/tumulus/shard.png";
+		public static final String NECRO_CAVALRY = "sprites/tumulus/necro_cavalry.png";
 
 		//BOSS
 		public static final String FRDG	= "sprites/boss/fireDragon.png";

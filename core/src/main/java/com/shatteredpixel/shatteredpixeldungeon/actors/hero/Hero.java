@@ -108,6 +108,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LighS;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LockedFloor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LostInventory;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LostSoul;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicGirlDebuff.MagicGirlSayCursed;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicGirlDebuff.MagicGirlSayKill;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicGirlDebuff.MagicGirlSayMoneyMore;
@@ -279,11 +280,14 @@ import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.levels.AncientMysteryCityBossLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.AncientMysteryCityLevel;
+import com.shatteredpixel.shatteredpixeldungeon.levels.ChurchLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
+import com.shatteredpixel.shatteredpixeldungeon.levels.LostTombLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.MiningLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.NewZeroFiveLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.NormalZeroFiveLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.RegularLevel;
+import com.shatteredpixel.shatteredpixeldungeon.levels.RogerBossLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.levels.UnlessEndFlowerLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.Chasm;
@@ -429,6 +433,13 @@ public class Hero extends Char {
 		if (buff(ElixirOfMight.HTBoost.class) != null){
 			HT += buff(ElixirOfMight.HTBoost.class).boost();
 		}
+
+		int totalLostHP = 0;
+		for (LostSoul soulBuff : buffs(LostSoul.class)){
+			totalLostHP += soulBuff.hpLoss;
+		}
+		HT = Math.max(1, HT - totalLostHP);
+
 
 		if (boostHP){
 			HP += Math.max(HT - curHT, 0);
@@ -1464,7 +1475,7 @@ public class Hero extends Char {
 
 
 		//水中祝福 但在BR不生效
-		if((branch == 0 || branch == 10) && !bossRushMode){
+		if((branch == 0 || branch == 10) && !bossRushMode && !(level instanceof LostTombLevel || level instanceof RogerBossLevel || level instanceof ChurchLevel)){
 			MoveWater();
 		}
 

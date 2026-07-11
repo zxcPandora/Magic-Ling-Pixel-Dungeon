@@ -221,9 +221,15 @@ public class LevelRules {
                     case 12:
                     case 13:
                     case 14:
-                        return new CavesLevel();
+                        if(Statistics.Tomb_Reach){
+                            return new LostTombLevel();
+                        } else {
+                            return new CavesLevel();
+                        }
                     case 15:
-                        if(Statistics.RandMode){
+                        if(Statistics.Tomb_Reach){
+                            return new RogerBossLevel();
+                        } else if(Statistics.RandMode){
                             switch (Random.Int(5)){
                                 case 2: return new CavesGirlDeadLevel();
                                 case 3: return new CaveTwoBossLevel();
@@ -231,7 +237,6 @@ public class LevelRules {
                                 default:
                                     return new AncientMysteryCityBossLevel();
                             }
-                            // ========== 替换：Statistics.boss_enhance & 0x4 → 索引2
                         } else if (SPDSettings.isBossEnhanceEnabled(2)) {
                             return new CavesGirlDeadLevel();
                         } else {
@@ -245,7 +250,11 @@ public class LevelRules {
                     case 17:
                     case 18:
                     case 19:
-                        return new CityLevel();
+                        if(Statistics.Tomb_Reach) {
+                            return new ChurchLevel();
+                        } else {
+                            return new CityLevel();
+                        }
                     case 20:
                         if(Statistics.RandMode){
                             switch (Random.Int(6)){
@@ -314,11 +323,21 @@ public class LevelRules {
                     case 13:
                     case 14:
                         return new MiningLevel();
+                    case 15:
+                        if(Statistics.Tomb_Reach){
+                            return new TombHallExitLevel();
+                        } else {
+                            return new DeadEndLevel();
+                        }
                     case 17:
                     case 18:
                         return new AncientMysteryCityLevel();
                     case 20:
-                        return new DwarfGeneralBossLevel();
+                        if(Statistics.Tomb_Reach){
+                            return new WitchRoadLevel();
+                        } else {
+                            return new DwarfGeneralBossLevel();
+                        }
                     case 31:
                         return new PacmanHollowActorLevel();
                     default:
