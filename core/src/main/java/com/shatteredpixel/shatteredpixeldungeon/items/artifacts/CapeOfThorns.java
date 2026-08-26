@@ -8,6 +8,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bleeding;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Regeneration;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -130,6 +131,7 @@ public class CapeOfThorns extends Artifact {
 					hero.busy();
 					hero.sprite.operate( curUser.pos );
 					GLog.p(Messages.get(this,"thorns"));
+					Buff.detach(hero, Invisibility.class);
 				} else if(charge < 10) {
 					GLog.w(Messages.get(this, "thorns_wait"));
 				} else {
@@ -201,12 +203,14 @@ public class CapeOfThorns extends Artifact {
 			return false;
 		}
 
-		private void applyBleedingToNearby() {
+		private void applyBleedingToNearby() {applyBleedingToNearby(true);}
+
+		private void applyBleedingToNearby(boolean canBleeding) {
 			Artifact art = getEquippedArtifact();
 			if (art == null || target == null) return;
 
 			int LV = art.level();
-			int radius = LV / 2;
+			int radius = Math.round(LV / 4f);
 
 			if (radius <= 0) return;
 
@@ -238,14 +242,14 @@ public class CapeOfThorns extends Artifact {
 							int actualBleedTurns = Math.max(1, Math.round(bleedTurns * distanceFactor));
 
 							Bleeding existingBleeding = ch.buff(Bleeding.class);
-							if (existingBleeding != null) {
+							if (existingBleeding != null && canBleeding) {
 								float newCooldown = Math.max(existingBleeding.visualcooldown(), actualBleedTurns);
 								existingBleeding.detach();
 								Buff.affect(ch, Bleeding.class).set(newCooldown);
-							} else {
+							} else if (canBleeding) {
 								Buff.affect(ch, Bleeding.class).set(actualBleedTurns);
 							}
-							ch.damage(art.level(), this, Char.DamageType.PHYSICAL);
+							ch.damage(Math.round(art.level()/2f), this, Char.DamageType.PHYSICAL);
 						}
 					}
 				}
@@ -290,7 +294,7 @@ public class CapeOfThorns extends Artifact {
 				detach();
 			}
 
-			applyBleedingToNearby();
+			applyBleedingToNearby(false);
 
 			spend(TICK);
 			return true;
@@ -385,7 +389,7 @@ public class CapeOfThorns extends Artifact {
 
 			if (!cursed && target.buff(MagicImmune.class) == null) {
 				if (attacker != null) {
-					attacker.damage(damage, this, Char.DamageType.REAL);
+					attacker.damage(damage/2, this, Char.DamageType.REAL);
 					Buff.append(attacker, Bleeding.class).set(level());
 				}
 			}

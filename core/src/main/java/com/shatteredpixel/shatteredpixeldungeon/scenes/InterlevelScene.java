@@ -28,6 +28,7 @@ import static com.shatteredpixel.shatteredpixeldungeon.Dungeon.branch;
 import static com.shatteredpixel.shatteredpixeldungeon.Dungeon.depth;
 import static com.shatteredpixel.shatteredpixeldungeon.Dungeon.hero;
 import static com.shatteredpixel.shatteredpixeldungeon.Statistics.lanterfireactive;
+import static com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent.TESTED_HYPOTHESIS;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -35,7 +36,10 @@ import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ArtifactRecharge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Recharging;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.MobSpawner;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Wraith;
@@ -45,6 +49,8 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.LostBackpack;
 import com.shatteredpixel.shatteredpixeldungeon.items.props.BottleWraith;
 import com.shatteredpixel.shatteredpixeldungeon.items.props.DreamSeed;
+import com.shatteredpixel.shatteredpixeldungeon.items.props.YanStudyingPaperOne;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.Chasm;
@@ -133,7 +139,11 @@ public class InterlevelScene extends PixelScene {
 	public void create() {
 		super.create();
 
-		yxlook = Random.Int(100)<=10 && Dungeon.depth>0 && !Dungeon.sbbossLevel() && !Dungeon.RushBossLevel() && !Dungeon.bossLevel() && mode == Mode.DESCEND && branch == 0;
+		int targetDepth = curTransition != null ? curTransition.destDepth : Dungeon.depth;
+		int targetBranch = curTransition != null ? curTransition.destBranch : Dungeon.branch;
+		boolean targetIsBoss = Dungeon.bossLevel(targetDepth)
+				|| (Statistics.bossRushMode && (Dungeon.RushBossLevel(targetDepth) || Dungeon.sbbossLevel(targetDepth)));
+		yxlook = Random.Int(100)<=10 && targetDepth>0 && !targetIsBoss && mode == Mode.DESCEND && targetBranch == 0;
 
 		if(tipset == null || tipset.isEmpty())
 			newTipSet();
@@ -401,6 +411,17 @@ public class InterlevelScene extends PixelScene {
 	}
 
 	private void LevelDownSpawn(Level level) {
+
+		if(!level.checkChanceFlash){
+			Hero hero = Dungeon.hero;
+			if (hero.hasTalent(TESTED_HYPOTHESIS)){
+				Buff.affect(hero, Recharging.class, 1f + hero.pointsInTalent(TESTED_HYPOTHESIS));
+				ScrollOfRecharging.charge(hero);
+				Buff.affect(Dungeon.hero, ArtifactRecharge.class).prolong(1f + hero.pointsInTalent(TESTED_HYPOTHESIS));
+			}
+			level.checkChanceFlash = true;
+		}
+
 		if (!level.checkDown && branch == 0) {
 			if (hero.belongings.getItem(BottleWraith.class) != null) {
 				for (int i = 0; i < Random.Int(1, Dungeon.depth / 2); i++) {
@@ -409,6 +430,7 @@ public class InterlevelScene extends PixelScene {
 					level.mobs.add(w);
 				}
 			}
+
 			if (hero.belongings.getItem(DreamSeed.class) != null && (!bossLevel() || Statistics.bossRushMode && !RushBossLevel())) {
 				if(Random.NormalIntRange(0,100)>=50){
 					Item randomitem = Generator.random();
@@ -428,6 +450,8 @@ public class InterlevelScene extends PixelScene {
 
 
 	private void descend() throws IOException {
+
+		YanStudyingPaperOne.onDescend();
 
 		if (hero == null) {
 			Mob.clearHeldAllies();
@@ -480,7 +504,8 @@ public class InterlevelScene extends PixelScene {
 		}
 
 		LevelDownSpawn(level);
-
+		YanStudyingPaperOne.onDescend();
+		
 		Dungeon.switchLevel( level, level.fallCell( fallIntoPit ));
 	}
 

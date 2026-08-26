@@ -20,6 +20,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.brews.Brew;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.Elixir;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.ExoticPotion;
+import com.shatteredpixel.shatteredpixeldungeon.items.props.BrokenRing;
 import com.shatteredpixel.shatteredpixeldungeon.items.props.Prop;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.InventoryScroll;
@@ -32,6 +33,8 @@ import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.Trinket;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.BloodthirstyThorn;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.EndingBlade;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.KillKing;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.LockSword;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
@@ -61,6 +64,8 @@ public class ScrollOfTeleTation extends InventoryScroll {
 
     @Override
     protected boolean usableOnItem(Item item) {
+
+        if (BrokenRing.isBind(item)) return false;
 
         if(item instanceof BloodthirstyThorn){
             if(item.level<10){
@@ -168,6 +173,8 @@ public class ScrollOfTeleTation extends InventoryScroll {
 
     public static Item changeItem( Item item ){
 
+        if (BrokenRing.isBind(item)) return null;
+
         if(item instanceof BloodthirstyThorn && item.level() >= 10 && !Statistics.OnlyBloodUpgrade){
             ShatteredPixelDungeon.scene().add(new WndOptions(new ItemSprite(item.image()),
                     item.name(),
@@ -204,6 +211,11 @@ public class ScrollOfTeleTation extends InventoryScroll {
             return null;
         } else if(item instanceof BloodthirstyThorn && item.level() >= 10 && Statistics.OnlyBloodUpgrade){
             return null;
+        }
+
+        if(item instanceof KillKing) {
+            ((KillKing) item).transmuteUpgrade();
+            return item;
         }
 
         if (item instanceof MagesStaff) {
@@ -282,6 +294,12 @@ public class ScrollOfTeleTation extends InventoryScroll {
         Weapon n;
         Generator.Category c;
         if (w instanceof MeleeWeapon) {
+            if(w instanceof EndingBlade){
+                return w;
+            }
+            if(w instanceof KillKing){
+                return w;
+            }
             //针对特殊武器修复：例如终焉的武器阶数是可以成长的
             c = Generator.wepTiers[ ((MeleeWeapon) w).tier <= 6 ? ((MeleeWeapon) w).tier-1 : 5 ];
         } else {

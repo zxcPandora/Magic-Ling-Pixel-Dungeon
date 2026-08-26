@@ -25,6 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ElementalBuff.BaseBuff.DeathBuff;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -41,6 +42,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 public class BuffIndicator extends Component {
+	public static int SIZE = 16;
 	private static BuffIndicator[] bossInstances = new BuffIndicator[4];
 	private static BuffIndicator heroInstance;
 	private static final int SCROLL_THRESHOLD = 12;
@@ -157,6 +159,8 @@ public class BuffIndicator extends Component {
 	public static final int GHOST_SCARY = 123;
 	public static final int PACMAN_GAME = 124;
 	public static final int BOX_GAME = 125;
+
+
 	public static final int ALL_SEARCH = 144;
 	public static final int BASE_STATUS = 145;
 	public static final int INVISIBLE_ACTION = 146;
@@ -165,8 +169,16 @@ public class BuffIndicator extends Component {
 	public static final int ANCIENT_SURVEY = 150;
 
 	public static final int UPGRADE_SOUL = 151;
-	public static final int DEAD_GAS = 152;
+
 	public static final int LOST_SOUL = 153;
+	public static final int DEATH = 154;
+	public static final int ARROW_NORMAL = 155;
+	public static final int ARROW_PARTY = 156;
+
+	public static final int WICKBONE = 157;
+
+	public static final int FIRE_DEH = 158;
+	public static final int FIRE_DEM = 159;
 
 	public static final int SIZE_SMALL = 7;
 	public static final int SIZE_LARGE = 16;
@@ -450,8 +462,13 @@ public class BuffIndicator extends Component {
 				}
 			} else if (!buff.iconTextDisplay().isEmpty()) {
 				grey.visible = false;
-				if (buff.type == Buff.buffType.POSITIVE)        text.hardlight(CharSprite.POSITIVE);
-				else if (buff.type == Buff.buffType.NEGATIVE)   text.hardlight(CharSprite.NEGATIVE);
+				if(buff instanceof DeathBuff){
+					text.hardlight(Window.ANSDO_COLOR);
+				} else {
+					if (buff.type == Buff.buffType.POSITIVE)        text.hardlight(CharSprite.POSITIVE);
+					else if (buff.type == Buff.buffType.NEGATIVE)   text.hardlight(CharSprite.NEGATIVE);
+				}
+
 				text.alpha(0.7f);
 
 				text.text(buff.iconTextDisplay());

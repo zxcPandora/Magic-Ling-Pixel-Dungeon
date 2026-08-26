@@ -17,6 +17,7 @@ public class NecroGuard extends Mob {
     {
         spriteClass = NecroGuardSprite.class;
         properties.add(Property.TUMULUS);
+        properties.add(Property.NECRO);
         HP = HT = 60;
         defenseSkill = 20;
         baseSpeed = 1f;
@@ -29,6 +30,12 @@ public class NecroGuard extends Mob {
 
     private static final String LEGION_SPAWN = "legion_spawn";
     private static final String LEGION_SPAWNED = "legion_spawned";
+
+    public void resetLegion(){
+        isLegionSpawn = false;
+        legionSpawned = false;
+        spawnLegionAlly();
+    }
 
     private int getGuardBonus() {
         int bonus = 0;

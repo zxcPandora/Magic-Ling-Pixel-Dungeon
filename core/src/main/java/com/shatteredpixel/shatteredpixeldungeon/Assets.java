@@ -61,6 +61,8 @@ public class Assets {
 		public static final String FocuRoom_MapLua      = "lua/focu_room.lua";
 
 		public static final String Tomb_DemonRoom_MapLua      = "lua/tomb/demonshoproom.lua";
+
+		public static final String Tomb_DeathTower_MapLua      = "lua/tomb/deadtowerroom.lua";
 	}
 
 	public static class Environment {
@@ -210,6 +212,7 @@ public class Assets {
 
 	public static class Interfaces {
 
+		public static final String SWSKIN  = "interfaces/sw_skin.png";
 		public static final String BLACK_RECT  = "interfaces/black_rect.png";
 		public static final String WHITE_RECT  = "interfaces/white_rect.png";
 
@@ -827,27 +830,36 @@ public class Assets {
 
 		public static final String KEEPERKINGBOT	= "sprites/npc/autoshop.png";
 
-		public static final String ARCHETTO	= "sprites/npc/avrt.png";
+		public static final String ARCHETTO	= "sprites/npc/avrt_princess.png";
 
 		//TOMB
 
 		//NPC
 		public static final String GORE	= "sprites/tumulus/npc/gore.png";
 
+		public static final String NECRO_ARCHER	= "sprites/tumulus/necro_arbalester.png";
+
+		//TOMB
 		public static final String GRAVERAT	= "sprites/tumulus/rat_graveyard.png";
 		public static final String WORM	= "sprites/tumulus/tomb_worm.png";
+		public static final String WORM_WHYHUMAN	= "sprites/tumulus/worm_whyhuman.png";
 		public static final String WISP	= "sprites/tumulus/wisp.png";
 		public static final String NECRO_SCOUT	= "sprites/tumulus/necro_scout.png";
+		public static final String NECRO_PIONEER	= "sprites/tumulus/nec_striker.png";
 		public static final String THIEF_SOUL	= "sprites/tumulus/tomb_robber.png";
 
 		//CHURCH
-		public static final String NECRO_ARCHER	= "sprites/tumulus/necro_arbalester.png";
+		public static final String NECRO_TOMB   = "sprites/tumulus/nec_tomb.png";
+		public static final String DEATH_SPRITE = "sprites/tumulus/death_spire.png";
 		public static final String NECRO_GUARD	= "sprites/tumulus/necro_soldier.png";
 		public static final String NECRO_APPREN	= "sprites/tumulus/nec_acolyte.png";
 
 		public static final String BONE_BEAST	= "sprites/tumulus/bone_beast.png";
 		public static final String SHARD	= "sprites/tumulus/shard.png";
 		public static final String NECRO_CAVALRY = "sprites/tumulus/necro_cavalry.png";
+
+		public static final String AGGREATUS	= "sprites/tumulus/aggregatus_of_grudge.png";
+		public static final String NECRO_WARLOCK	= "sprites/tumulus/necro_warlock.png";
 
 		//BOSS
 		public static final String FRDG	= "sprites/boss/fireDragon.png";
@@ -932,7 +944,8 @@ public class Assets {
 
 		public static final String REDSWARM				= "sprites/RedSearm.png";
 		public static final String REN					= "sprites/npc/ren.png";
-		public static final String HIRO					= "sprites/npc/hiro.png";
+		public static final String KUSUMI					= "sprites/npc/kusumi.png";
+		public static final String KUSUMI_MG					= "sprites/npc/kusumi_mg.png";
 		public static final String DragonBlueGirl		= "sprites/npc/smallblue.png";
 		public static final String DKGirl				= "sprites/npc/DKGirl.png";
 

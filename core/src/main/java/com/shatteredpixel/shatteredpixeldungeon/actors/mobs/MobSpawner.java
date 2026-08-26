@@ -72,12 +72,14 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.GraveRat;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.NecroAcolyte;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.NecroArcher;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.NecroGuard;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.NecroPioneer;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.NecroScout;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.SkeletonDemon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.SmallSkeletonDemon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.ThiefSoul;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.Wisp;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.Worm;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.WormWhyHuman;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.RatSkull;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.hollow.utils.MobsUtilsRoom;
 import com.watabou.utils.Random;
@@ -720,12 +722,12 @@ public class MobSpawner extends Actor {
 			case 13:
 				res = new ArrayList<>(Arrays.asList(
 						GraveRat.class, Worm.class, Wisp.class, Worm.class, ThiefSoul.class,
-						SmallSkeletonDemon.class, NecroScout.class));
+						NecroScout.class));
 				break;
 			case 14:
 				res = new ArrayList<>(Arrays.asList(
 						GraveRat.class, Worm.class, NecroScout.class, Worm.class, ThiefSoul.class,
-						SmallSkeletonDemon.class, NecroScout.class));
+						NecroScout.class));
 				break;
 			case 16:
 				res = new ArrayList<>(Arrays.asList(
@@ -835,6 +837,10 @@ public class MobSpawner extends Actor {
 					cl = DeadEye.class;
 				} else if (cl == SmallSkeletonDemon.class) {
 					cl = SkeletonDemon.class;
+				} else if (cl == Worm.class) {
+					cl = WormWhyHuman.class;
+				} else if (cl == NecroScout.class) {
+					cl = NecroPioneer.class;
 				}
 				rotation.set(i, cl);
 			}

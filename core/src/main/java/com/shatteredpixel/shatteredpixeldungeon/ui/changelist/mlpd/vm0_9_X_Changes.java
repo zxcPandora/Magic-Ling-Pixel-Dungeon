@@ -16,6 +16,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.props.Dirt_KnifeStand;
 import com.shatteredpixel.shatteredpixeldungeon.items.props.DreamSeed;
 import com.shatteredpixel.shatteredpixeldungeon.items.props.FaintGlimmer;
 import com.shatteredpixel.shatteredpixeldungeon.items.props.HeartOfCrystalFractal;
+import com.shatteredpixel.shatteredpixeldungeon.items.props.HellButterfly;
 import com.shatteredpixel.shatteredpixeldungeon.items.props.KillEye;
 import com.shatteredpixel.shatteredpixeldungeon.items.props.KnightStabbingSword;
 import com.shatteredpixel.shatteredpixeldungeon.items.props.Monocular;
@@ -47,7 +48,8 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.GhoulPlusSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.GiantFlowerSlimeSprites;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.GuardCapitalSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.HiroSprites;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.KusumiMagicGirlSprites;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.KusumiSprites;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MageHandSprite;
@@ -83,6 +85,7 @@ import java.util.ArrayList;
 public class vm0_9_X_Changes {
 
     public static void addAllChanges(ArrayList<ChangeInfo> changeInfos) {
+        add_V0950_Changes(changeInfos);
         add_V0948_Changes(changeInfos);
         add_V0945_Changes(changeInfos);
         add_V0942_Changes(changeInfos);
@@ -95,7 +98,7 @@ public class vm0_9_X_Changes {
         add_V0900_Changes(changeInfos);
     }
 
-    public static void add_V0948_Changes(ArrayList<ChangeInfo> changeInfos ) {
+    public static void add_V0950_Changes(ArrayList<ChangeInfo> changeInfos ) {
 
         ChangeInfo changes = new ChangeInfo("Lost-失落古墓-敬请期待-Tomb", true,"");
         changes.hardlight(0xCCCCCC);
@@ -124,7 +127,154 @@ public class vm0_9_X_Changes {
         changes.addButton(new ChangeButton(new Image(Icons.get(Icons.NEWS)), "后续开发预告",
                 "失落古墓外传正在稳步推进开发，更多场景、怪物、专属武器与剧情内容将陆续放出，敬请期待后续版本情报！"));
 
-        changes = new ChangeInfo("v0.9.4.8-9", true, "");
+        changes = new ChangeInfo("v0.9.5.0", true, "");
+        changes.hardlight(Window.TITLE_COLOR);
+        changeInfos.add(changes);
+        changes.addButton(new ChangeButton(new Image("Ling.png", 0, 0, 16, 16), "开发者的话",
+                "v0.9.5.0 — 完成于 2026-08-14 13:45\n\n" +
+                        "没想到上次更新魔绫已经是两个月前的事了。近期，开发组一直在全力进行古墓内容的制作。\n" +
+                        "不过在路途中，我们结识了新的伙伴，同时，作为一次补充更新，这个版本我们将早期惊鸿杯的优胜创作全部实装，并完成了诸多bug修复与游戏优化。祝大家玩的愉快！\n\n" +
+                        "——MLPD主开发：JDSALing\n" +
+                        "翻译：久住"));
+
+        changes = new ChangeInfo(Messages.get(ChangesScene.class, "new"), false, null);
+        changes.hardlight(Window.TITLE_COLOR);
+        changeInfos.add(changes);
+
+        changes.addButton(new ChangeButton(new KusumiSprites(), ("新NPC"),
+                ("神秘的少女，来历不详，履历不详……")));
+
+        changes.addButton(new ChangeButton(new KusumiMagicGirlSprites(), ("新NPC"),
+                ("神秘的少女，来历不详，履历不详……")));
+
+        changes.addButton(new ChangeButton(new ArchettoSprite(), "弦事件推进",
+                "弦近期似乎换上了新衣服……？"));
+
+        changes.addButton(new ChangeButton(Icons.get(Icons.AUDIO), ("新音乐：Ice Ruins"),
+                ("作者：禊-misogi-\n\n为三区全新音乐，欢迎欣赏。")));
+
+        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.SOS_3), "新道具：支援信号套组",
+                ("一支由三位传奇狙击手组成的狙击小队在这一带兜售这些装备。当你点亮其中的水晶并向天燃放可用的信号弹时，她们便会在暗处助你一臂之力。出场费就是这个小盒的售价。\n" +
+                        "\n" +
+                        "+0时：一个装有一颗魔法水晶的橡木盒。燃放信号弹之前记得先点亮水晶，不然不作数。\n" +
+                        "+1 等同于 +3 时：与标准版相比，除了木盒里的水晶变得更加透亮，木盒的边上还镶上了金色花纹。\n" +
+                        "+2 等同于 +7 时：精雕细琢的红木盒子，里面是躺在天鹅绒中的蓝色魔法水晶。\n" +
+                        "+3 等同于 +10 时：精雕细琢的水晶盒子，里面是躺在天鹅绒中的红色魔法水晶。盒盖的背面写着她们提供的白金典藏版特供隐藏套餐。\n" +
+                        "\n" +
+                        "这件道具仅能在商店以1500金币买到。在商店中与老板对话时可花500/1000/1500金币升级到+1/+2/+3。\n" +
+                        "\n" +
+                        "使用液火药剂+浮空药剂+炼金催化剂+5炼金能量可以合成信号弹，信号弹有填装按钮，可以填装进求救信号套组中。\n" +
+                        "\n"),
+                (
+                        "求救信号套组仅有1充能，需要填装信号弹来充能。初始购买时带有1充能，每次购买升级获得一颗额外的信号弹。\n" +
+                        "\n" +
+                        "使用后，获得6次/11次/17次/17次（0/+1/+2/+3）\"狙击手援护\"buff。\n" +
+                        "\n" +
+                        "狙击手援护：每15回合，你视野内的一名随机敌人将受到一次狙击伤害，伤害类型在三种中随机，伤害随所在层数成长。如果冷却结束后视野内没有敌人，则在下一次视野内出现敌人瞬间触发。\n" +
+                        "\n"),(
+                        "霜冻阻滞箭：造成（层数~10+层数/2）伤害与10回合霜冻效果。层数达到21时，翻转其上下限。\n" +
+                        "\n" +
+                        "穿甲燃烧箭：造成（5+层数~10+层数）的伤害，无视护甲，并以磷火点燃敌人。\n" +
+                        "\n" +
+                        "电磁震荡箭：造成（层数~10+层数/2）伤害与落点5回合的电场。层数到达21时，翻转其上下限。\n" +
+                        "\n" +
+                        "求救信号套组升级到+3时，充能数提升到3点，装满以后可以同时燃放3颗信号弹，获得75回合\"狩猎狂欢\"buff。\n" +
+                        "\n" +
+                        "狩猎狂欢：每4/7/10回合，朝本层随机敌人发射霜冻阻滞箭/电磁震荡箭/穿甲燃烧箭，三者冷却同时进行并独立计算。你可以在buff栏详情中查看三位狙击手的具体冷却时间。")));
+
+        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.SKY_PEN_PLUS), "新神器：天界画笔",
+                ("这支画笔散发着已然消逝的颜色，据说唯有它能画出失落的神明：因为神明死亡后，它身上的颜色也将无处可觅。\n" +
+                        "\n" +
+                        "未满级：运用这支画笔本身的魔力能够创造一些\"画作\"，不过它目前的魔力尚未完全恢复。或许你应当献上你对过往的敬意……\n" +
+                        "满级：运用这支画笔本身的魔力能够创造一些\"画作\"，它目前的魔力已完全恢复。你已献上你的所有敬意，现在一切失落的颜色已再次出现于笔端。\n" +
+                        "\n" +
+                        "诅咒效果：鉴定物品速度减半，陷阱被动感知减半，正常视野下降1格。\n"),(
+                        "\n" +
+                        "作画：\n" +
+                        "古焰之色——画笔释放出其中已逝的烈焰，释放火焰浪潮燃烧周围敌人。范围为同等级焰浪法杖，伤害为8~16*（1+神器实际等级），附加 1+神器实际等级/2 回合残废。\n" +
+                        "\n" +
+                        "严冬之色——画笔释放出其中已逝的严冬，释放冰霜气息使敌人止步。在指定点释放暴风雪，使目标地点3*3范围内敌人陷入2+神器实际等级 回合迟缓；以射弹形式瞄准。\n" +
+                        "\n" +
+                        "天际之色——画笔释放出其中已逝的梦境，释放梦境之影隐蔽自身。在自身周围产生暗夜迷雾，气体量为100+神器实际等级*25。\n" +
+                        "\n" +
+                        "使用：\n" +
+                        "画笔以充能方式储存能量，上限为3+实际等级，每（120-该神器实际等级*5-已损失充能*8）回合获得一层充能。每次作画固定消耗一点充能。\n" +
+                        "\n"),
+                (
+                        "实际等级上限为4，显示为+2/+5/+7/+10。\n" +
+                        "\n" +
+                        "升级：\n" +
+                        "画笔需要依次投入以下类型的物品以献上你的追忆——\n" +
+                        "1.一瓶冰爆魔药（画笔正在索取寒冷的回忆，请献上冰爆魔药）\n" +
+                        "2.一把带有至少+2升级的，被鉴定的，不低于2阶的非诅咒武器（画笔正在索取可怖的回忆，请献上精良的武器）\n" +
+                        "3.15点生命上限（画笔正在索取诞生前的回忆，请献上自己的一部分）\n" +
+                        "4.一件带有至少+2升级的，被鉴定的非诅咒戒指（画笔正在索取骄盛的回忆，请献上精良的戒指）\n" +
+                        "\n" +
+                        "该神器每次升级会使玩家幻惑50回合，幻惑时再试图升级神器会显示\"你正陷入回忆中无法自拔，恐怕不能这样做了。\"\n" +
+                        "\n" +
+                        "神器充能：每回合充能0.1。")));
+
+        changes.addButton (new ChangeButton (HeroSprite.avatar (HeroClass.MAGE, 13), "新皮肤：学院时光",
+                "售价1500钴币\n\n原稿：Priestess\n\n绘制：Noah-7385 & Daniel-Calan\n\n茉莉就读于法师学院时的制服，在校时，她是数一数二的魔法尖子生。传闻她常独自待在图书馆最深处，研读那些失传已久的古老法术……"));
+
+        changes.addButton( new ChangeButton( new TalentIcon(Talent.TESTED_HYPOTHESIS), Talent.TESTED_HYPOTHESIS.title(),
+                "法师T1天赋，实验假设天赋更换为 灵光一闪"));
+
+        changes = new ChangeInfo(Messages.get(ChangesScene.class, "changes"), false, null);
+        changes.hardlight(CharSprite.WARNING);
+        changeInfos.add(changes);
+
+        changes.addButton (new ChangeButton (new ItemSprite(ItemSpriteSheet.BEACON), "皮肤下架说明",
+                "由于 晚宴邀请 and 虔圣书徒 两款皮肤的画师单方面发狂，现制作组已与其永久解除合作，并永久移除所有与其有关的内容。\n" +
+                        "对喜爱这两款皮肤的玩家深表歉意，但这也是不可抗力的因素，对于此前已拥有晚宴邀请的玩家，将在版本更新后免费赠送新皮肤：学院时光。\n" +
+                        "对于此前已拥有虔圣书徒的玩家，将在更新后启动游戏后，自动发放500钴币。"));
+
+        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.SCROLL_GOLD), ("金蝶模式V2.5"),
+                (
+                        "金蝶模式-V2.5\n\n" +
+                                "_-_ 优化金蝶神器嬗变，现在只能嬗变未装备的神器\n" +
+                                "_-_ 金蝶中与狐狸对话有概率获得全新特殊武器，开启特殊模式！")));
+
+        changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), Messages.get(ChangesScene.class, "bugfixes"),
+                ("V0.9.5.0：\n\n" +
+                        "_-_ 修复白浪刺剑武技先前可以以墙体为目标使用，无限距离且不消耗充能的严重问题\n" +
+                        "_-_ 优化苍白花环新增特判：不会被拟态之王与浊焰魔女收走，防止利用该特性逃课成就\n" +
+                        "_-_ 修复携带bzm的礼物会导致开灯不增加视野的问题\n" +
+                        "_-_ 修复钻石大剑与轻音铃铛在乾坤宗师的\"伴生强化\"天赋下获取假升级的问题，虚拟等级仅显示，不再错误影响面板与实际效果\n" +
+                        "_-_ 修复魔女的印记——浊燃祝福效果异常的问题，描述为20%全伤减免，此前错误实现了免疫法术伤害，现已修正为正确的20%全伤减免\n" +
+                        "_-_ 修复灵魂卷轴部分设计问题 & 钻石大剑武技的异常问题\n"),
+                (
+                        "_-_ 修复莲娜Boss部分技能有可能卡死玩家的问题\n" +
+                        "_-_ 修复部分极端情况下寻路发生了存档永久崩溃问题，更新该版本进入存档将恢复正常\n" +
+                        "_-_ 修复在古堡全面搜查传送卡死在房间的问题，与0层一样，可以点击卡死固定传送回搜查入口点\n" +
+                        "_-_ 修复空间残片在古堡三大小游戏中生效导致的各种问题\n" +
+                        "_-_ 修复大冰杖在高等级因为移速减至100%卡死的严重问题\n" +
+                        "_-_ 修复艾诺琳娜部分技能可能导致游戏闪退的严重问题\n" +
+                        "_-_ 修复牧笛贴图尺寸对齐不一致的问题\n" +
+                                "_-_ 修复天赋-戒指强化-对部分神器无加成的异常")));
+
+        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.BROKEN_RING), "破碎之环-T3-加强",
+                Messages.get(BrokenRing.class,"desc")));
+
+
+        changes = new ChangeInfo(Messages.get(ChangesScene.class, "nerfs"), false, null);
+        changes.hardlight(Window.R_COLOR);
+        changeInfos.add(changes);
+
+        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.ARTIFACT_CAPE), "荆棘斗篷",
+                "_-_ 物理直伤由等级削弱至等级/2\n" +
+                          "_-_ 荆棘力场范围由半径等级/2削弱至半径等级/4 _向上取整_\n" +
+                          "_-_ 隐身状态下开启荆棘力场会破除隐身状态"));
+
+        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.FAINT_GLIMMER), "无暇微光-T3-削弱",
+                Messages.get(FaintGlimmer.class,"desc")));
+
+        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.HELL_BUTTERFLY), "炼狱赤蝶-T3-削弱",
+                Messages.get(HellButterfly.class,"desc")));
+    }
+
+    public static void add_V0948_Changes(ArrayList<ChangeInfo> changeInfos ) {
+        ChangeInfo changes = new ChangeInfo("v0.9.4.8-9", true, "");
         changes.hardlight(Window.TITLE_COLOR);
         changeInfos.add(changes);
         changes.addButton(new ChangeButton(new Image("Ling.png", 0, 0, 16, 16), "开发者的话",
@@ -423,7 +573,7 @@ public class vm0_9_X_Changes {
         changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.CICRE_MUSIC), "新武器：轻音铃铛",
                 "身形移动，便会打断鸣响的连击。\n攻击奏响「轻音」，连续攻击引动「回音」"));
 
-        changes.addButton(new ChangeButton(new HiroSprites(), "久住事件推进",
+        changes.addButton(new ChangeButton(new KusumiSprites(), "久住事件推进",
                 "久住相关剧情持续更新，全新相关事件等待探索。"));
 
         changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.HELL_BUTTERFLY), "新藏品：炼狱赤蝶",
@@ -728,7 +878,7 @@ public class vm0_9_X_Changes {
                         "普通徽章：尽竭\n\n" +
                         "隐藏徽章：勇敢者的印记")));
 
-        changes.addButton(new ChangeButton(new HiroSprites(), ("久住新年特别版"),
+        changes.addButton(new ChangeButton(new KusumiSprites(), ("久住新年特别版"),
                 ("新年到来之际，她却只能在无尽轮回中默默等待毁灭降临，如果你能去看看她，说不定会感谢你呢。\n\n" +
                         "在9层下楼携带一种特殊的信物将有概率前往。")));
 
@@ -833,10 +983,6 @@ public class vm0_9_X_Changes {
         changes.addButton(new ChangeButton(Icons.get(Icons.DISPLAY), ("材质包系统1.0"),
                 ("材质包系统正式登场，目前预置了5个材质包，你也可以自行定制材质包。\n\n" +
                         "如要定制材质包，请查阅游戏新闻材质包置顶使用说明。")));
-
-        changes.addButton(new ChangeButton(new HiroSprites(), ("新NPC:久住"),
-                ("在时间静止的区域，她在那里静静的等待毁灭的降临。\n\n" +
-                        "在9层下楼携带一种特殊的信物将有概率前往")));
 
         changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.BOMB_SWORD), ("新武器：炸弹匕首"),
                 ("炸弹匕首重做归来，并实装了动画效果！\n\n这件武器会在击杀敌人时有概率获取一枚弹药，通过升级该武器可以提高概率，和解锁更加强大的炸弹。" )));

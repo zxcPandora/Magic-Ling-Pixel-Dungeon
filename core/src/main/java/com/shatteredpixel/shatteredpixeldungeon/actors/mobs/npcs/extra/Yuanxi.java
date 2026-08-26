@@ -25,7 +25,7 @@ public class Yuanxi extends NTNPC {
 
     @Override
     protected boolean act() {
-        if(Dungeon.level.heroFOV[pos]){
+        if(Dungeon.level.heroFOV[pos] && Dungeon.level.distance(pos,Dungeon.hero.pos)<=3){
             sprite.showAlert();
             selfTeleCooldown--;
             if(!teleporting){

@@ -24,7 +24,9 @@ package com.shatteredpixel.shatteredpixeldungeon.sprites;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GnollGeomancer;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.bosses.QliphothLasher;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.NecroPioneer;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.thanks.SniperSupport;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Crossbow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.RedBloodMoon;
@@ -119,7 +121,7 @@ public class MissileSprite extends ItemSprite implements Tweener.Listener {
 		ANGULAR_SPEEDS.put(ScorpioSprite.ScorpioShot.class,   0);
 
 		ANGULAR_SPEEDS.put(Bullet.class,         0);
-		//720 is default
+		ANGULAR_SPEEDS.put(NecroPioneer.BoneKnife.class,         0);
 
 		ANGULAR_SPEEDS.put(GnollGeomancer.Boulder.class,   90);
 		
@@ -130,6 +132,10 @@ public class MissileSprite extends ItemSprite implements Tweener.Listener {
 		
 		ANGULAR_SPEEDS.put(Shuriken.class,                  2160);
 		ANGULAR_SPEEDS.put(TenguSprite.TenguShuriken.class, 2160);
+
+		ANGULAR_SPEEDS.put(SniperSupport.FrostSnipeArrow.class, 180);
+		ANGULAR_SPEEDS.put(SniperSupport.ShockSnipeArrow.class, 180);
+		ANGULAR_SPEEDS.put(SniperSupport.BurnSnipeArrow.class,  180);
 	}
 
 	//TODO it might be nice to have a source and destination angle, to improve thrown weapon visuals
@@ -195,8 +201,12 @@ public class MissileSprite extends ItemSprite implements Tweener.Listener {
 				|| item instanceof ScorpioSprite.ScorpioShot
 				|| item instanceof TenguSprite.TenguShuriken){
 			speed *= 1.5f;
+		}else if (item instanceof SniperSupport.FrostSnipeArrow
+				|| item instanceof SniperSupport.ShockSnipeArrow
+				|| item instanceof SniperSupport.BurnSnipeArrow) {
+			speed *= 1.64f;
 		}
-		
+
 		PosTweener tweener = new PosTweener( this, to, d.length() / speed );
 		tweener.listener = this;
 		parent.add( tweener );

@@ -27,6 +27,7 @@ import static com.shatteredpixel.shatteredpixeldungeon.Statistics.lanterfireacti
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Clipboard;
+import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Conducts;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Rankings;
@@ -272,9 +273,27 @@ public class WndHero extends WndTabbed {
 			itemButton.setRect(title.right(), seedButton.bottom()+itemButton.height()+2, 16, 16);
 			add(itemButton);
 
+			IconButton skinButton = new IconButton(new Image(Assets.Interfaces.SWSKIN)){
+				@Override
+				protected void onClick() {
+					super.onClick();
+					hide();
+					GameScene.show(new WndSelectSkin(Dungeon.hero.heroClass));
+				}
+
+				@Override
+				protected String hoverText() {
+					return Messages.titleCase(Messages.get(HeroStat.class, "skin"));
+				}
+
+			};
+			add(skinButton);
+
 			if(HelpSettings() && Dungeon.isDLC(Conducts.Conduct.DEV)){
 				itemButton.active = true;
+				skinButton.setRect(title.right(), itemButton.bottom()+skinButton.height()+2, 16, 16);
 			} else {
+				skinButton.setRect(title.right(), seedButton.bottom()+skinButton.height()+2, 16, 16);
 				itemButton.active = false;
 				itemButton.visible = false;
 			}

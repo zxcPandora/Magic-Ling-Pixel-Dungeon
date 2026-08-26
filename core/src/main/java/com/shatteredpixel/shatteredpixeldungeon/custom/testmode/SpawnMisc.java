@@ -140,6 +140,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.spells.UnstableSpell;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.WildEnergy;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.Runestone;
 import com.shatteredpixel.shatteredpixeldungeon.items.thanks.DistressSignalNesting;
+import com.shatteredpixel.shatteredpixeldungeon.items.thanks.FlareBullet;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.Trinket;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.TrinketCatalyst;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.TippedDart;
@@ -157,6 +158,7 @@ import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
+import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.Reflection;
 
 import java.util.ArrayList;
@@ -365,7 +367,10 @@ public class SpawnMisc extends TestItem {
 
             bookList.add(HollowCityBook.class);
             bookList.add(DimandBook.class);
-            bookList.add(TombReachBook.class);
+
+            if(DeviceCompat.isDebug()){
+                bookList.add(TombReachBook.class);
+            }
         }
 
         //Trinket
@@ -406,6 +411,8 @@ public class SpawnMisc extends TestItem {
             miscList.add(MIME.GOLD_THREE.class);
             miscList.add(MIME.GOLD_FOUR.class);
             miscList.add(MIME.GOLD_FIVE.class);
+
+            miscList.add(FlareBullet.class); // 信号弹的杂物生成秘卷生成
         }
 
         if(miscList2.isEmpty()) {

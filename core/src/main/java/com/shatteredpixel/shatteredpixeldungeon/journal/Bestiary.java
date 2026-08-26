@@ -124,17 +124,22 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.spical.GnollHero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.spical.GreenSlting;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.spical.SkyDead;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.spical.SuccubusQueen;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.Aggregatus;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.GraveRat;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.HighNecromancer;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.NecroAcolyte;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.NecroArcher;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.NecroCavalry;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.NecroGuard;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.NecroPioneer;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.NecroScout;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.NecroWarlock;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.SkeletonDemon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.SmallSkeletonDemon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.ThiefSoul;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.Wisp;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.Worm;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.tumulus.WormWhyHuman;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.DriedRose;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.CorpseDust;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLivingEarth;
@@ -175,6 +180,9 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.traps.ToxicTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.WarpingTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.WeakeningTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.WornDartTrap;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.tomb.CorpseDustTrap;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.tomb.DeadSoulTrap;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.tomb.MobSpawnTrap;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.plants.AikeLaier;
 import com.shatteredpixel.shatteredpixeldungeon.plants.BlandfruitBush;
@@ -431,18 +439,11 @@ public enum Bestiary {
 				DeviceCompat.isDebug() || DeviceCompat.isMDP()
 						? new Class<?>[]{
 								GraveRat.class, Worm.class, Wisp.class, NecroScout.class,
-						ThiefSoul.class, SkeletonDemon.class, SmallSkeletonDemon.class}
+						ThiefSoul.class, SkeletonDemon.class, SmallSkeletonDemon.class,
+						NecroPioneer.class, WormWhyHuman.class
+				}
 
-						: new Class<?>[]{Albino.class,
-						Salamander.class,
-						SRPDHBLR.class, NewBlackHost.class,
-						Bandit.class, SpectralNecromancer.class,
-						ArmoredBrute.class, DM201.class, MolotovHuntsman.class,
-						Elemental.ChaosElemental.class, Senior.class,
-						Acidic.class,
-
-						TormentedSpirit.class, PhantomPiranha.class,
-						CrystalMimic.class, ArmoredStatue.class}
+						: new Class<?>[]{Rat.class}
 		);
 
 		CHURCH.addEntities(
@@ -450,18 +451,12 @@ public enum Bestiary {
 						? new Class<?>[]{
 						//T2
 						NecroGuard.class, NecroArcher.class,
-						NecroAcolyte.class, NecroCavalry.class}
+						NecroAcolyte.class,
 
-						: new Class<?>[]{Albino.class,
-						Salamander.class,
-						SRPDHBLR.class, NewBlackHost.class,
-						Bandit.class, SpectralNecromancer.class,
-						ArmoredBrute.class, DM201.class, MolotovHuntsman.class,
-						Elemental.ChaosElemental.class, Senior.class,
-						Acidic.class,
+						NecroCavalry.class, Aggregatus.class, NecroWarlock.class,
+						HighNecromancer.class}
 
-						TormentedSpirit.class, PhantomPiranha.class,
-						CrystalMimic.class, ArmoredStatue.class}
+						: new Class<?>[]{Rat.class}
 		);
 		
 
@@ -519,13 +514,19 @@ public enum Bestiary {
 				WandOfWarding.Ward.class, WandOfWarding.Ward.WardSentry.class, WandOfLivingEarth.EarthGuardian.class,
 				ShadowClone.ShadowAlly.class, SmokeBomb.NinjaLog.class, SpiritHawk.HawkAlly.class, MiniSaka.class, MageHand.class);
 
-		TRAP.addEntities(WornDartTrap.class, PoisonDartTrap.class, DisintegrationTrap.class, GatewayTrap.class,
+		TRAP.addEntities(
+				WornDartTrap.class, PoisonDartTrap.class, DisintegrationTrap.class, GatewayTrap.class,DeadSoulTrap.class,
+
 				ChillingTrap.class, BurningTrap.class, ShockingTrap.class, AlarmTrap.class, GrippingTrap.class, TeleportationTrap.class, OozeTrap.class,
-				FrostTrap.class, BlazingTrap.class, StormTrap.class, GuardianTrap.class, FlashingTrap.class, WarpingTrap.class,
-				ConfusionTrap.class, ToxicTrap.class, CorrosionTrap.class,
+
+				FrostTrap.class, BlazingTrap.class, StormTrap.class, GuardianTrap.class, FlashingTrap.class, WarpingTrap.class,MobSpawnTrap.class,
+
+				ConfusionTrap.class, ToxicTrap.class, CorrosionTrap.class,CorpseDustTrap.class,
 				FlockTrap.class, SummoningTrap.class, WeakeningTrap.class, CursingTrap.class,
 				GeyserTrap.class, ExplosiveTrap.class, RockfallTrap.class, PitfallTrap.class,
-				DistortionTrap.class, DisarmingTrap.class, GrimTrap.class);
+				DistortionTrap.class, DisarmingTrap.class, GrimTrap.class
+
+				 );
 
 		PLANT.addEntities(Rotberry.class, Sungrass.class, Fadeleaf.class, Icecap.class,
 				Firebloom.class, Sorrowmoss.class, Swiftthistle.class, Blindweed.class,

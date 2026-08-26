@@ -271,9 +271,13 @@ public class WndGoldBurrety extends Window {
                             result.upgrade();
                             Statistics.upgradeGold--; // 移动到这里确保只减一次
                         }
-                        result.collect();
+                        if (result != item) {
+                            result.collect();
+                        }
                     }
-                    item.detach(Dungeon.hero.belongings.backpack);
+                    if (result != item) {
+                        item.detach(Dungeon.hero.belongings.backpack);
+                    }
                 }
 
             } else if (item instanceof MissileWeapon) {
@@ -632,7 +636,6 @@ public class WndGoldBurrety extends Window {
             if (item instanceof MeleeWeapon) {
                 if (item instanceof LockSword)
                     return false;
-
                 Generator.Category c = Generator.wepTiers[((MeleeWeapon) item).tier - 1];
                 int canChangeWeapon = 0;
                 int lastWeaponIndex = 0;

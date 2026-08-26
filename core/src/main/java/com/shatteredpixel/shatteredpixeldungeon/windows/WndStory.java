@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
 import static com.shatteredpixel.shatteredpixeldungeon.Challenges.CS;
+import static com.shatteredpixel.shatteredpixeldungeon.Challenges.DHXD;
 import static com.shatteredpixel.shatteredpixeldungeon.Dungeon.RollLevel;
 import static com.shatteredpixel.shatteredpixeldungeon.Dungeon.hero;
 import static com.shatteredpixel.shatteredpixeldungeon.Statistics.lanterfireactive;
@@ -229,10 +230,10 @@ public class WndStory extends Window {
 	@Override
 	public void hide() {
 		super.hide();
-		Banner mapnameSlain = new Banner( BannerSprites.get( BannerSprites.Type.NULL ) );
-		GameScene sceneGame = (GameScene) Game.scene();
-		float screenW = Game.width;
 		if(!Statistics.bossRushMode && Game.scene() instanceof GameScene){
+			Banner mapnameSlain = new Banner( BannerSprites.get( BannerSprites.Type.NULL ) );
+			GameScene sceneGame = (GameScene) Game.scene();
+			float screenW = Game.width;
 			switch (Dungeon.depth) {
 				case 0:
 					if(!Dungeon.isChallenged(CS)){
@@ -352,7 +353,7 @@ public class WndStory extends Window {
 		}
 		if (!RollLevel()) return;
 
-		if (hero.lanterfire >= 90) {
+		if (hero.lanterfire >= 90 || Dungeon.isChallenged(DHXD) && hero.lanterfire > 60) {
 			goodLanterFire();
 		} else if (hero.lanterfire >= 80) {
 			applyEffectBasedOnChance(0.85f, 0.05f);

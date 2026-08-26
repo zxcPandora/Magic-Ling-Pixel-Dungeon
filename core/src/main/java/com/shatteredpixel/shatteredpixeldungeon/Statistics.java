@@ -25,6 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.props.ArmorScalesOfBzmdr;
 import com.shatteredpixel.shatteredpixeldungeon.items.props.BlockingDrug;
 import com.shatteredpixel.shatteredpixeldungeon.items.props.BottleWraith;
 import com.shatteredpixel.shatteredpixeldungeon.items.props.BrokenBone;
+import com.shatteredpixel.shatteredpixeldungeon.items.props.BrokenRing;
 import com.shatteredpixel.shatteredpixeldungeon.items.props.CatGirlCosplay;
 import com.shatteredpixel.shatteredpixeldungeon.items.props.CloakFragmentsOfBzmdr;
 import com.shatteredpixel.shatteredpixeldungeon.items.props.ConfusedMieMieTalisman;
@@ -338,6 +339,8 @@ public class Statistics {
 
 	public static boolean moonlowgetAloneRoom;
 
+	public static boolean isEndingbald=false;
+
 	private static final String ICECLAN ="iceCyanBlueSquareCoin";
 
 	private static final String GAMETIME = "gameTime";
@@ -510,6 +513,8 @@ public class Statistics {
 
 	public static int moveBoxScoreMax;
 	public static int YuanXiLimit;
+	//求救信号套组的生成
+	public static boolean SOSisAlreadySpawn = false;
 
 	static {
 		propPositive0 = new ArrayList<>(Arrays.asList(
@@ -559,7 +564,8 @@ public class Statistics {
 		propNegative2 = new ArrayList<>(Arrays.asList(
 				new NoteOfBzmdr(),
 				new StarDust(),
-				new FreeCrack()
+				new FreeCrack(),
+				new BrokenRing()
 		));
 
 		propChaotic0 = new ArrayList<>(Arrays.asList(
@@ -626,7 +632,8 @@ public class Statistics {
 		propNegative2 = new ArrayList<>(Arrays.asList(
 				new NoteOfBzmdr(),
 				new StarDust(),
-				new FreeCrack()
+				new FreeCrack(),
+				new BrokenRing()
 		));
 
 		propChaotic0 = new ArrayList<>(Arrays.asList(
@@ -644,6 +651,8 @@ public class Statistics {
 		));
 
 		MustHardLevel = false;
+
+		isEndingbald = Random.Float() <= 0.2f;
 
 		isSmallLeaf = false;
 
@@ -924,6 +933,7 @@ public class Statistics {
     public static void storeInBundle(Bundle bundle) {
 
 		/**/
+		bundle.put("SOS_SPAWNED", SOSisAlreadySpawn);
 
 		bundle.put("HOLLOW_DAY",Hollow_Holiday);
 		bundle.put("TOMBREACH",Tomb_Reach);
@@ -1187,6 +1197,7 @@ public class Statistics {
 
 		bundle.put("MustDFRT",MustHardLevel);
 		bundle.put("MJPORALROOM",moonlowgetAloneRoom);
+		bundle.put("EDXDFR",isEndingbald);
 	}
 
 	private static ArrayList<Prop> convertToPropList(Collection<Bundlable> bundlableCollection) {
@@ -1203,6 +1214,8 @@ public class Statistics {
 	}
 	
 	public static void restoreFromBundle( Bundle bundle ) {
+		SOSisAlreadySpawn = bundle.getBoolean("SOS_SPAWNED");
+
 		moonlowgetAloneRoom = bundle.getBoolean("MJPORALROOM");
 		MustHardLevel = bundle.getBoolean("MustDFRT");
 		isSmallLeaf = bundle.getBoolean("DASDXEOGBCD");
@@ -1369,6 +1382,8 @@ public class Statistics {
 		gameTime = bundle.getInt(GAMETIME);
 
 		gameNight = bundle.getBoolean(GAMENIGHT);
+
+		isEndingbald = bundle.getBoolean("EDXDFR");
 
 		//分数
 		progressScore   = bundle.getInt( PROG_SCORE );

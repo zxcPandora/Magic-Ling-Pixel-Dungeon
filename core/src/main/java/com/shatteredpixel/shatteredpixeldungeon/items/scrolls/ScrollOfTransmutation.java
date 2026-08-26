@@ -41,6 +41,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.brews.Brew;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.Elixir;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.ExoticPotion;
+import com.shatteredpixel.shatteredpixeldungeon.items.props.BrokenRing;
 import com.shatteredpixel.shatteredpixeldungeon.items.props.Prop;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
@@ -48,10 +49,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.stones.Runestone;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.Trinket;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.BloodthirstyThorn;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.LockSword;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.Dart;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.TippedDart;
@@ -76,8 +74,16 @@ public class ScrollOfTransmutation extends InventoryScroll {
 
 	@Override
 	protected boolean usableOnItem(Item item) {
+		if (BrokenRing.isBind(item)) return false;
 		if(item instanceof MeleeWeapon) {
 
+			// 终焉不能嬗变
+			if(item instanceof EndingBlade){
+				return false;
+			}
+			if(item instanceof KillKing){
+				return ((KillKing) item).canTransmuteUpgrade();
+			}
 			if(item instanceof BloodthirstyThorn){
 				if(item.level<10){
 					return false;
@@ -123,8 +129,11 @@ public class ScrollOfTransmutation extends InventoryScroll {
 	protected void onItemSelected(Item item) {
 		
 		Item result = changeItem(item);
-		
-		if (result == null){
+
+		if (result == item && (item instanceof EndingBlade || item instanceof KillKing)){
+			curUser.sprite.emitter().start(Speck.factory(Speck.CHANGE), 0.2f, 10);
+			GLog.p(Messages.get(item.getClass(), "transmute_upgraded"));
+		} else if (result == null){
 			//This shouldn't ever trigger
 			GLog.n( Messages.get(this, "nothing") );
 			curItem.collect( curUser.belongings.backpack );
@@ -173,10 +182,20 @@ public class ScrollOfTransmutation extends InventoryScroll {
 	}
 
 	public Item changeItem(Item item){
+		if (BrokenRing.isBind(item)) return null;
+
 		if(item instanceof LockSword){
 			return null;
 		}
 
+		if(item instanceof EndingBlade){
+			((EndingBlade) item).transmuteUpgrade();
+			return item;
+		}
+		if(item instanceof KillKing){
+			((KillKing) item).transmuteUpgrade();
+			return item;
+		}
 		if(item instanceof BloodthirstyThorn && item.level() >= 10 && !Statistics.OnlyBloodUpgrade){
 			ShatteredPixelDungeon.scene().add(new WndOptions(new ItemSprite(item.image()),
                     item.name(),
@@ -341,6 +360,12 @@ public class ScrollOfTransmutation extends InventoryScroll {
 		Weapon n;
 		Generator.Category c;
 		if (w instanceof MeleeWeapon) {
+			if(w instanceof EndingBlade){
+				return w;
+			}
+			if(w instanceof KillKing){
+				return w;
+			}
 			//针对特殊武器修复：例如终焉的武器阶数是可以成长的
 			c = Generator.wepTiers[ ((MeleeWeapon) w).tier <= 6 ? ((MeleeWeapon) w).tier-1 : 5 ];
 		} else {
@@ -352,7 +377,7 @@ public class ScrollOfTransmutation extends InventoryScroll {
 				if(w instanceof MissileWeapon){
 					n = (Weapon)Generator.randomUsingDefaults(c);
 				} else {
-					n = Generator.randomWeapon(true);
+                    n = Generator.randomWeapon(true);
 				}
 			} else {
 				n = (Weapon)Generator.randomUsingDefaults(c);

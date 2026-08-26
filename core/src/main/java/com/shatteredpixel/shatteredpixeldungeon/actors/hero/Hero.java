@@ -86,6 +86,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corrosion;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.DeadSoul;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Dread;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Drowsy;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ElementalBuff.BaseBuff.DeathBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ElementalBuff.BaseBuff.ScaryBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ElementalBuff.DamageBuff.ScaryDamageBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ElementalBuff.Immunities.ScaryImmunitiesBuff;
@@ -109,6 +110,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LockedFloor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LostInventory;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LostSoul;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicGirlDebuff.MagicGirlDebuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicGirlDebuff.MagicGirlSayCursed;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicGirlDebuff.MagicGirlSayKill;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicGirlDebuff.MagicGirlSayMoneyMore;
@@ -158,9 +160,11 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.bosses.hollow.DeadDo
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.bosses.hollow.Nyarlathotep;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.lb.BlackSoul;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.MageHand;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.NPC;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.zero.WhiteLingLand;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.zero.fiveyears.BzmdrNewYears;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.zero.normal.DogDogMusic;
+import com.shatteredpixel.shatteredpixeldungeon.custom.buffs.ZeroDefense;
 import com.shatteredpixel.shatteredpixeldungeon.custom.ch.GameTracker;
 import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.CustomPlayer;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
@@ -231,6 +235,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.props.TerrorDoll;
 import com.shatteredpixel.shatteredpixeldungeon.items.props.TerrorDollB;
 import com.shatteredpixel.shatteredpixeldungeon.items.props.WenStudyingPaperOne;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.AnySkinSelect;
+import com.shatteredpixel.shatteredpixeldungeon.items.quest.CorpseDust;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.DarkGold;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.DevItem.CrystalLing;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.Empty;
@@ -257,6 +262,11 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportat
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.extra.ScrollOfSoul;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.extra.ScrollOfTeleTation;
+import com.shatteredpixel.shatteredpixeldungeon.items.thanks.BrokenRingArmorBind;
+import com.shatteredpixel.shatteredpixeldungeon.items.thanks.BrokenRingArtifactBind;
+import com.shatteredpixel.shatteredpixeldungeon.items.thanks.BrokenRingMiscBind;
+import com.shatteredpixel.shatteredpixeldungeon.items.thanks.BrokenRingRingBind;
+import com.shatteredpixel.shatteredpixeldungeon.items.thanks.CelestialBrush;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ThirteenLeafClover;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfAnmy;
@@ -266,6 +276,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Chilling;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Crossbow;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.EndingBlade;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Flail;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagicTorch;
@@ -405,6 +416,11 @@ public class Hero extends Char {
 	public float awareness;
 
 	private int resistHealth = 0;
+
+	public void addResistHealth(int value) {
+		this.resistHealth += value;
+	}
+
 	private int originalHT = 20;
     private boolean chargeAnmy = false;
 
@@ -422,6 +438,7 @@ public class Hero extends Char {
 	private static final String CHARGES = "chargesUsed";
 
 	public void updateHT( boolean boostHP ){
+		if (hero == null) return;
 		int curHT = HT;
 
 		originalHT = 20 + 5*(lvl-1);
@@ -439,6 +456,15 @@ public class Hero extends Char {
 			totalLostHP += soulBuff.hpLoss;
 		}
 		HT = Math.max(1, HT - totalLostHP);
+
+		if(belongings.weapon instanceof EndingBlade){
+			if(((EndingBlade) belongings.weapon).trialMode){
+				HT = Math.max(1, Math.round(HT * 0.50f));
+				if (HP > HT) {
+					HP = HT;
+				}
+			}
+		}
 
 
 		if (boostHP){
@@ -496,6 +522,7 @@ public class Hero extends Char {
 	}
 	private static final String CAKEUSED = "cakeused";
 	public boolean resting = false;
+	public boolean actedThisTurn = false;
 	public Belongings belongings;
 	public int exp = 0;
 
@@ -749,7 +776,7 @@ public class Hero extends Char {
 	public int tier() {
 		Armor armor = belongings.armor();
 
-		//TODO 临时皮肤策略
+		//皮肤策略
 		switch (hero.heroClass.GetSkin()){
 			case 1:
 				return 9;
@@ -758,11 +785,15 @@ public class Hero extends Char {
 			case 3:
 				return 10;
 			case 4:
-				return 13;
+				return heroClass == HeroClass.HUNTRESS ? normalSkin(armor) : 13;
 			case 5:
 				return 14;
 		}
 
+        return normalSkin(armor);
+    }
+
+	public int normalSkin(Armor armor){
 		if (armor instanceof ClassArmor){
 			return 7;
 		} else if (armor != null){
@@ -1014,6 +1045,10 @@ public class Hero extends Char {
 
 		if( Dungeon.isDLC(Conducts.Conduct.DEV) &&CustomPlayer.overrideGame &&CustomPlayer.shouldOverride ){
 			dr = CustomPlayer.baseArmor;
+		}
+
+		if(buff(ZeroDefense.class) != null){
+			dr = 0;
 		}
 
 		return dr;
@@ -1287,12 +1322,14 @@ public class Hero extends Char {
 
 	public void spendAndNext( float time ) {
 		busy();
+		actedThisTurn = true;
 		spend( time );
 		next();
 	}
 
 	@Override
 	public boolean act() {
+		actedThisTurn = false;
 		PropBuff propBuffbuff = buff(PropBuff.class);
 		if (propBuffbuff != null) {
 			int remainingLevel = Math.max(0, propBuffbuff.levelA);
@@ -1304,7 +1341,8 @@ public class Hero extends Char {
 						if (remainingLevel <= 0) break;
 						if (b.type == Buff.buffType.NEGATIVE
 								&& !(b instanceof AllyBuff)
-								&& !(b instanceof LostInventory)) {
+								&& !(b instanceof LostInventory)
+								&& !(b instanceof MagicGirlDebuff)) {
 							b.detach();
 							remainingLevel--;
 							isNegative = true;
@@ -1315,6 +1353,28 @@ public class Hero extends Char {
 				propBuffbuff.levelA = remainingLevel;
 				if (isNegative) {
 					GLog.p(Messages.get(FaintGlimmer.class, "light", count,remainingLevel));
+				}
+			}
+		}
+
+		ArrayList<CorpseDust.MiniCorpseDust> food = hero.belongings.getAllItems(CorpseDust.MiniCorpseDust.class);
+		for (CorpseDust.MiniCorpseDust w : food.toArray(new CorpseDust.MiniCorpseDust[0])){
+			w.dropLevel--;
+		}
+
+		if(hero.belongings.weapon instanceof EndingBlade){
+			EndingBlade endingBlade = (EndingBlade) hero.belongings.weapon;
+			endingBlade.onTurnUpdate(hero);
+			if (endingBlade.trialMode){
+				if(buff(EndingBlade.TrialModeBuff.class) == null){
+					Buff.affect(this, EndingBlade.TrialModeBuff.class);
+				}
+				for (Mob mob : Dungeon.level.mobs.toArray(new Mob[0])) {
+					if (!(mob instanceof NPC)) {
+						if(mob.buff(EndingBlade.TrialModeBuff.class) == null){
+							Buff.affect(mob, EndingBlade.TrialModeBuff.class);
+						}
+					}
 				}
 			}
 		}
@@ -1370,40 +1430,72 @@ public class Hero extends Char {
 		}
 
 		BrokenRing brokenRing = hero.belongings.getItem(BrokenRing.class);
-		if(brokenRing != null){
-			if(belongings.misc() != null){
+		if (brokenRing != null) {
+			// 血量恢复到阈值以上 → 自动解除对应封锁（通用栏位无阈值，不在此列）
+			boolean anyReleased = false;
+			if (belongings.armor() instanceof BrokenRingArmorBind && HT * 0.2f < HP) {
+				BrokenRing.releaseBindSilent(hero, belongings.armor());
+				anyReleased = true;
+			}
+			if (belongings.artifact() instanceof BrokenRingArtifactBind && HT * 0.6f < HP) {
+				BrokenRing.releaseBindSilent(hero, belongings.artifact());
+				anyReleased = true;
+			}
+			if (belongings.ring() instanceof BrokenRingRingBind && HT * 0.4f < HP) {
+				BrokenRing.releaseBindSilent(hero, belongings.ring());
+				anyReleased = true;
+			}
+
+			if (anyReleased) {
+				GLog.i(Messages.get(brokenRing, "released"));
+			}
+			// 通用栏位：只要不是伴生物就束缚（需识别所有伴生物，包括被放进通配栏位的戒指/神器伴生物）
+			if (belongings.misc() != null && !BrokenRing.isBind(belongings.misc())) {
 				KindofMisc misc = belongings.misc();
-				if(misc.cursed){
+				if (misc.cursed) {
 					misc.cursed = false;
 				}
-				misc.doUnequip(this,true);
-				GLog.n(Messages.get(brokenRing,"lock"));
+				BrokenRingMiscBind bind = new BrokenRingMiscBind();
+				bind.mimic(misc);
+				misc.doUnequip(this, false);
+				belongings.misc = bind;
+				GLog.n(Messages.get(brokenRing, "lock"));
 			}
-			if(HT * 0.6f >= HP){
-				if(belongings.artifact() != null) {
+			if (HT * 0.6f >= HP) {
+				if (belongings.artifact() != null && !(belongings.artifact() instanceof BrokenRingArtifactBind)) {
 					Artifact artifact = belongings.artifact();
 					if (artifact.cursed) {
 						artifact.cursed = false;
 					}
-					artifact.doUnequip(this, true);
+					BrokenRingArtifactBind bind = new BrokenRingArtifactBind();
+					bind.mimic(artifact);
+					artifact.doUnequip(this, false);
+					belongings.artifact = bind;
 				}
 			}
-			if(HT * 0.4f >= HP){
-				if(belongings.ring() != null) {
+			if (HT * 0.4f >= HP) {
+				if (belongings.ring() != null && !(belongings.ring() instanceof BrokenRingRingBind)) {
 					Ring ring = belongings.ring();
 					if (ring.cursed) {
 						ring.cursed = false;
 					}
-					ring.doUnequip(this, true);
+					BrokenRingRingBind bind = new BrokenRingRingBind();
+					bind.mimic(ring);
+					ring.doUnequip(this, false);
+					belongings.ring = bind;
 				}
 			}
-			if(HT * 0.2f >= HP){
-				if(belongings.armor() != null) {
+			if (HT * 0.2f >= HP) {
+				if (belongings.armor() != null && !(belongings.armor() instanceof BrokenRingArmorBind)) {
 					Armor armor = belongings.armor();
 					if (armor.cursed) {
 						armor.cursed = false;
 					}
-					armor.doUnequip(this, true);
+					BrokenRingArmorBind bind = new BrokenRingArmorBind();
+					bind.mimic(armor);
+					armor.doUnequip(this, false);
+					belongings.armor = bind;
+					((HeroSprite) hero.sprite).updateArmor();
 				}
 			}
 		}
@@ -1435,8 +1527,10 @@ public class Hero extends Char {
 		}
 
 		BzmdrNewYears.BzmdrGift bzmdrGift = hero.belongings.getItem(BzmdrNewYears.BzmdrGift.class);
-		if(bzmdrGift != null){
+		if(bzmdrGift != null && buff(LighS.class) == null){
 			viewDistance = level.viewDistance + Statistics.BzmdrCJHeroViewDistance;
+		} else if (buff(LighS.class) != null){
+			viewDistance = level.viewDistance + Statistics.BzmdrCJHeroViewDistance + LighS.DISTANCE;
 		}
 
 		MageHand.MageHandControl m = hero.belongings.getItem(MageHand.MageHandControl.class);
@@ -1705,6 +1799,7 @@ public class Hero extends Char {
 			actResult = false;
 
 		} else {
+			actedThisTurn = true;
 
 			resting = false;
 
@@ -2500,10 +2595,21 @@ public class Hero extends Char {
 	@Override
 	public void damage( int dmg, Object src, DamageType type ) {
 
+		if(hero.belongings.weapon instanceof EndingBlade){
+			if(((EndingBlade) hero.belongings.weapon).trialMode && src instanceof Mob) {
+				dmg *= 2;
+			}
+		}
+
+		if (buff(EndingBlade.TurbulentFlameHeart.class) != null && !(src instanceof EndingBlade.TurbulentFlameHeart)){
+			dmg = Math.round(dmg * 0.2f);
+		}
+
 		if(hero.belongings.getItem(EmotionalAggregation.class)!=null && Random.Float()>0.90f ){
 			GLog.n(Messages.get(EmotionalAggregation.class,"block"));
 			return;
 		}
+
 
 		ChampionHero.Element doubleBuff = buff(ChampionHero.Element.class);
 		if (doubleBuff != null) {
@@ -2557,7 +2663,7 @@ public class Hero extends Char {
 
 		//regular damage interrupt, triggers on any damage except specific mild DOT effects
 		// unless the player recently hit 'continue moving', in which case this is ignored
-		if (!(src instanceof Hunger || src instanceof Viscosity.DeferedDamage || src instanceof BloodLoss) && damageInterrupt ) {
+		if (!(src instanceof Hunger || src instanceof Viscosity.DeferedDamage || src instanceof BloodLoss || src instanceof UnlessFlower.UnlessFlowerTime) && damageInterrupt ) {
 			interrupt();
 			resting = false;
 		}
@@ -2606,6 +2712,12 @@ public class Hero extends Char {
 		}
 
 		dmg = (int)Math.ceil(dmg * RingOfTenacity.damageMultiplier( this ));
+
+		DeathBuff deathBuff = buff(DeathBuff.class);
+		if (deathBuff != null){
+			float multiplier = 1f + deathBuff.damageBonus();
+			dmg = (int)Math.ceil(dmg * multiplier);
+		}
 
 		//TODO improve this when I have proper damage source logic
 		if (belongings.armor() != null && belongings.armor().hasGlyph(AntiMagic.class, this)
@@ -3576,20 +3688,22 @@ public class Hero extends Char {
 		for (Ankh i : belongings.getAllItems(Ankh.class)) {
 			if (ankh != null && !(i.isBlessed()) && !OnlySummonAlive) {
 				if (lanterfireactive && hero.lanterfire <= 40 && !i.isBlessed() || hero.buff(LostInventory.class) != null) {
-					BlackSoul s = new BlackSoul();
-					if(Statistics.ankhToExit){
-						s.pos = Dungeon.level.entrance();
-					} else {
-						s.pos = Dungeon.hero.pos;
+					if(Dungeon.isChallenged(DHXD)){
+						BlackSoul s = new BlackSoul();
+						if(Statistics.ankhToExit){
+							s.pos = Dungeon.level.entrance();
+						} else {
+							s.pos = Dungeon.hero.pos;
+						}
+						s.gold = Dungeon.gold;
+						Dungeon.gold = 0;
+						s.state = s.WANDERING;
+						GameScene.add(s);
+						Buff.affect(s, ChampionEnemy.DeadSoulSX.class);
+						Buff.affect(s, DeadSoul.class);
+						OnlySummonAlive = true;
+						GameScene.flash(0x80FF0000);
 					}
-					s.gold = Dungeon.gold;
-					Dungeon.gold = 0;
-					s.state = s.WANDERING;
-					GameScene.add(s);
-					Buff.affect(s, ChampionEnemy.DeadSoulSX.class);
-					Buff.affect(s, DeadSoul.class);
-					OnlySummonAlive = true;
-					GameScene.flash(0x80FF0000);
 				}
 			}
 		}
@@ -4050,6 +4164,11 @@ public class Hero extends Char {
 						//don't want to let the player search though hidden doors in tutorial
 						if (SPDSettings.intro()){
 							chance = 0;
+						}
+
+						// CelestialBrush天界画笔诅咒效果
+						if (CelestialBrush.isEquippedAndCursed()) {
+							chance /= 2f; // 诅咒生效，陷阱感知概率减半
 						}
 
 						if (Random.Float() < chance) {

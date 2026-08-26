@@ -47,6 +47,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ChampionHero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Charm;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corruption;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Dread;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ElementalBuff.BaseBuff.DeathBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.GoodLuck;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.GreaterHaste;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.HalomethaneBurning;
@@ -109,6 +110,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfDisintegration
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Lucky;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.EndingBlade;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.Dart;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
@@ -116,6 +118,7 @@ import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.Chasm;
+import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.tomb.DeadTowerRoom;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Swiftthistle;
@@ -156,6 +159,8 @@ public abstract class Mob extends Char {
 
 	public boolean isOldDay = false;
 
+	public boolean isEndLess;
+
 	public Class<? extends CharSprite> spriteClass;
 
 	protected int target = -1;
@@ -193,6 +198,19 @@ public abstract class Mob extends Char {
 
 		if(Dungeon.isChallenged(DHXD)||lanterfireactive){
 			damageAttackProcLanterMob();
+		}
+
+
+		if (enemy != null && enemy == Dungeon.hero) {
+			if (properties.contains(Property.NECRO)) {
+				DeathBuff death = enemy.buff(DeathBuff.class);
+				if (death != null) {
+					float percentLost = damage / (float) enemy.HT * 100;
+					death.onDamageTaken(percentLost);
+				} else {
+					Buff.affect(enemy, DeathBuff.class).set((3), 5);
+				}
+			}
 		}
 
 		if(Dungeon.isChallenged(CS)){
@@ -284,6 +302,8 @@ public abstract class Mob extends Char {
 	private static final String  OLDDAY	= "oldday";
 
 	private static final String  FIRST_ATTACK	= "first_attack";
+
+	private static final String  ENDLESS	= "endless";
 
     protected Object loot = null;
 
@@ -413,6 +433,8 @@ public abstract class Mob extends Char {
 
 		bundle.put( OLDDAY, isOldDay);
 
+		bundle.put( ENDLESS, isEndLess);
+
 		bundle.put( FIRST_ATTACK, firstAttack);
 	}
 
@@ -448,6 +470,7 @@ public abstract class Mob extends Char {
 
 		isOldDay = bundle.getBoolean( OLDDAY );
 		firstAttack = bundle.getBoolean(FIRST_ATTACK);
+		isEndLess = bundle.getBoolean(ENDLESS);
 	}
 
 	private boolean cellIsPathable( int cell ){
@@ -1310,6 +1333,18 @@ public abstract class Mob extends Char {
 			//50% chance to round up, 50% to round down
 			if (EXP % 2 == 1) EXP += Random.Int(2);
 			EXP /= 2;
+		}
+
+		if (properties.contains(Property.NECRO)) {
+			for (Mob mob : Dungeon.level.mobs) {
+				if (mob instanceof DeadTowerRoom.DeadTower && mob.isAlive()) {
+					DeadTowerRoom.DeadTower tower = (DeadTowerRoom.DeadTower) mob;
+					if (Dungeon.level.distance(this.pos, tower.pos) <= 4) {
+						int reduceDef = Random.NormalIntRange(0, 5);
+						this.defenseSkill = Math.max(0, this.defenseSkill - reduceDef);
+					}
+				}
+			}
 		}
 
 		if(Dungeon.level.feeling == Level.Feeling.SKYCITY && alignment == Alignment.ENEMY){

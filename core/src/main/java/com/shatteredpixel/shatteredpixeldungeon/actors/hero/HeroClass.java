@@ -78,7 +78,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bags.PropBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.ScrollHolder;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.VelvetPouch;
 import com.shatteredpixel.shatteredpixeldungeon.items.books.bookslist.TestBooks;
-import com.shatteredpixel.shatteredpixeldungeon.items.books.questbookslist.TombReachBook;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfFrost;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
@@ -90,6 +89,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.WaterSoul;
 import com.shatteredpixel.shatteredpixeldungeon.items.props.Prop;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.BlessingNecklace;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.DevItem.CrystalLing;
+import com.shatteredpixel.shatteredpixeldungeon.items.quest.KillSwarm;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.Pickaxe;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.SakaFishSketon;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.SmallLightHeader;
@@ -110,11 +110,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.ImperialExorc
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Rapier;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.WornShortsword;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.spdtomlpd.Break;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.spdtomlpd.ReedPipe;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.spdtomlpd.RitualSword;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.spdtomlpd.TragicCode;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.spdtomlpd.TreeList;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MagicFlyBlade;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingKnife;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingSpike;
@@ -222,14 +217,7 @@ public enum HeroClass {
 		new ScrollOfIdentify().identify();
 
 		if (Dungeon.isDLC(Conducts.Conduct.DEV)){
-
-			new TombReachBook().identify().collect();
-
-			new RitualSword().identify().collect();
-			new TreeList().identify().collect();
-			new TragicCode().identify().collect();
-			new ReedPipe().identify().collect();
-			new Break().identify().collect();
+			new KillSwarm().identify().collect();
 
 			new PropBag().quantity(1).identify().collect();
 
@@ -502,8 +490,6 @@ public enum HeroClass {
 
 	public String GetSkinAssest(){
 		switch (this) {
-			case WARRIOR: default:
-				return Assets.Sprites.AVATARS_WARRIOR;
 			case MAGE:
 				return Assets.Sprites.AVATARS_MAGE;
 			case ROGUE:
@@ -514,6 +500,8 @@ public enum HeroClass {
 				return Assets.Sprites.AVATARS_DUELIST;
 			case SPELLSWORD:
 				return Assets.Sprites.AVATARS_SPELLSWORD;
+			case WARRIOR: default:
+				return Assets.Sprites.AVATARS_WARRIOR;
 		}
 	}
 
